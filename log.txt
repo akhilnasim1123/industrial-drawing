@@ -1,0 +1,439 @@
+Resolving dependencies...
+Downloading packages...
+  meta 1.17.0 (1.18.1 available)
+  win32 5.15.0 (6.0.0 available)
+Got dependencies!
+2 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Publishing industrial_drawing_flutter 1.0.0 to https://pub.dev:
+├── CHANGELOG.md (<1 KB)
+├── LICENSE (1 KB)
+├── README.md (3 KB)
+├── analysis_options.yaml (1 KB)
+├── android
+│   ├── app
+│   │   ├── build.gradle.kts (1 KB)
+│   │   └── src
+│   │       ├── debug
+│   │       │   └── AndroidManifest.xml (<1 KB)
+│   │       ├── main
+│   │       │   ├── AndroidManifest.xml (2 KB)
+│   │       │   ├── kotlin
+│   │       │   │   └── com
+│   │       │   │       └── example
+│   │       │   │           └── industrial_drawing_flutter
+│   │       │   │               └── MainActivity.kt (<1 KB)
+│   │       │   └── res
+│   │       │       ├── drawable
+│   │       │       │   └── launch_background.xml (<1 KB)
+│   │       │       ├── drawable-v21
+│   │       │       │   └── launch_background.xml (<1 KB)
+│   │       │       ├── mipmap-hdpi
+│   │       │       │   └── ic_launcher.png (<1 KB)
+│   │       │       ├── mipmap-mdpi
+│   │       │       │   └── ic_launcher.png (<1 KB)
+│   │       │       ├── mipmap-xhdpi
+│   │       │       │   └── ic_launcher.png (<1 KB)
+│   │       │       ├── mipmap-xxhdpi
+│   │       │       │   └── ic_launcher.png (1 KB)
+│   │       │       ├── mipmap-xxxhdpi
+│   │       │       │   └── ic_launcher.png (1 KB)
+│   │       │       ├── values
+│   │       │       │   └── styles.xml (<1 KB)
+│   │       │       └── values-night
+│   │       │           └── styles.xml (<1 KB)
+│   │       └── profile
+│   │           └── AndroidManifest.xml (<1 KB)
+│   ├── build
+│   │   └── reports
+│   │       └── problems
+│   │           └── problems-report.html (128 KB)
+│   ├── build.gradle.kts (<1 KB)
+│   ├── gradle
+│   │   └── wrapper
+│   │       └── gradle-wrapper.properties (<1 KB)
+│   ├── gradle.properties (<1 KB)
+│   └── settings.gradle.kts (<1 KB)
+├── example
+│   ├── README.md (<1 KB)
+│   ├── analysis_options.yaml (1 KB)
+│   ├── android
+│   │   ├── app
+│   │   │   ├── build.gradle.kts (1 KB)
+│   │   │   └── src
+│   │   │       ├── debug
+│   │   │       │   └── AndroidManifest.xml (<1 KB)
+│   │   │       ├── main
+│   │   │       │   ├── AndroidManifest.xml (2 KB)
+│   │   │       │   ├── kotlin
+│   │   │       │   │   └── com
+│   │   │       │   │       └── example
+│   │   │       │   │           └── example
+│   │   │       │   │               └── MainActivity.kt (<1 KB)
+│   │   │       │   └── res
+│   │   │       │       ├── drawable
+│   │   │       │       │   └── launch_background.xml (<1 KB)
+│   │   │       │       ├── drawable-v21
+│   │   │       │       │   └── launch_background.xml (<1 KB)
+│   │   │       │       ├── mipmap-hdpi
+│   │   │       │       │   └── ic_launcher.png (<1 KB)
+│   │   │       │       ├── mipmap-mdpi
+│   │   │       │       │   └── ic_launcher.png (<1 KB)
+│   │   │       │       ├── mipmap-xhdpi
+│   │   │       │       │   └── ic_launcher.png (<1 KB)
+│   │   │       │       ├── mipmap-xxhdpi
+│   │   │       │       │   └── ic_launcher.png (1 KB)
+│   │   │       │       ├── mipmap-xxxhdpi
+│   │   │       │       │   └── ic_launcher.png (1 KB)
+│   │   │       │       ├── values
+│   │   │       │       │   └── styles.xml (<1 KB)
+│   │   │       │       └── values-night
+│   │   │       │           └── styles.xml (<1 KB)
+│   │   │       └── profile
+│   │   │           └── AndroidManifest.xml (<1 KB)
+│   │   ├── build.gradle.kts (<1 KB)
+│   │   ├── gradle
+│   │   │   └── wrapper
+│   │   │       └── gradle-wrapper.properties (<1 KB)
+│   │   ├── gradle.properties (<1 KB)
+│   │   └── settings.gradle.kts (<1 KB)
+│   ├── ios
+│   │   ├── Flutter
+│   │   │   ├── AppFrameworkInfo.plist (<1 KB)
+│   │   │   ├── Debug.xcconfig (<1 KB)
+│   │   │   └── Release.xcconfig (<1 KB)
+│   │   ├── Runner
+│   │   │   ├── AppDelegate.swift (<1 KB)
+│   │   │   ├── Assets.xcassets
+│   │   │   │   ├── AppIcon.appiconset
+│   │   │   │   │   ├── Contents.json (2 KB)
+│   │   │   │   │   ├── Icon-App-1024x1024@1x.png (10 KB)
+│   │   │   │   │   ├── Icon-App-20x20@1x.png (<1 KB)
+│   │   │   │   │   ├── Icon-App-20x20@2x.png (<1 KB)
+│   │   │   │   │   ├── Icon-App-20x20@3x.png (<1 KB)
+│   │   │   │   │   ├── Icon-App-29x29@1x.png (<1 KB)
+│   │   │   │   │   ├── Icon-App-29x29@2x.png (<1 KB)
+│   │   │   │   │   ├── Icon-App-29x29@3x.png (<1 KB)
+│   │   │   │   │   ├── Icon-App-40x40@1x.png (<1 KB)
+│   │   │   │   │   ├── Icon-App-40x40@2x.png (<1 KB)
+│   │   │   │   │   ├── Icon-App-40x40@3x.png (<1 KB)
+│   │   │   │   │   ├── Icon-App-60x60@2x.png (<1 KB)
+│   │   │   │   │   ├── Icon-App-60x60@3x.png (1 KB)
+│   │   │   │   │   ├── Icon-App-76x76@1x.png (<1 KB)
+│   │   │   │   │   ├── Icon-App-76x76@2x.png (1 KB)
+│   │   │   │   │   └── Icon-App-83.5x83.5@2x.png (1 KB)
+│   │   │   │   └── LaunchImage.imageset
+│   │   │   │       ├── Contents.json (<1 KB)
+│   │   │   │       ├── LaunchImage.png (<1 KB)
+│   │   │   │       ├── LaunchImage@2x.png (<1 KB)
+│   │   │   │       ├── LaunchImage@3x.png (<1 KB)
+│   │   │   │       └── README.md (<1 KB)
+│   │   │   ├── Base.lproj
+│   │   │   │   ├── LaunchScreen.storyboard (2 KB)
+│   │   │   │   └── Main.storyboard (1 KB)
+│   │   │   ├── Info.plist (2 KB)
+│   │   │   ├── Runner-Bridging-Header.h (<1 KB)
+│   │   │   └── SceneDelegate.swift (<1 KB)
+│   │   ├── Runner.xcodeproj
+│   │   │   ├── project.pbxproj (24 KB)
+│   │   │   ├── project.xcworkspace
+│   │   │   │   ├── contents.xcworkspacedata (<1 KB)
+│   │   │   │   └── xcshareddata
+│   │   │   │       ├── IDEWorkspaceChecks.plist (<1 KB)
+│   │   │   │       └── WorkspaceSettings.xcsettings (<1 KB)
+│   │   │   └── xcshareddata
+│   │   │       └── xcschemes
+│   │   │           └── Runner.xcscheme (3 KB)
+│   │   ├── Runner.xcworkspace
+│   │   │   ├── contents.xcworkspacedata (<1 KB)
+│   │   │   └── xcshareddata
+│   │   │       ├── IDEWorkspaceChecks.plist (<1 KB)
+│   │   │       └── WorkspaceSettings.xcsettings (<1 KB)
+│   │   └── RunnerTests
+│   │       └── RunnerTests.swift (<1 KB)
+│   ├── lib
+│   │   ├── Drawing.dart (108 KB)
+│   │   └── main.dart (19 KB)
+│   ├── linux
+│   │   ├── CMakeLists.txt (4 KB)
+│   │   ├── flutter
+│   │   │   ├── CMakeLists.txt (2 KB)
+│   │   │   ├── generated_plugin_registrant.cc (<1 KB)
+│   │   │   ├── generated_plugin_registrant.h (<1 KB)
+│   │   │   └── generated_plugins.cmake (<1 KB)
+│   │   └── runner
+│   │       ├── CMakeLists.txt (<1 KB)
+│   │       ├── main.cc (<1 KB)
+│   │       ├── my_application.cc (5 KB)
+│   │       └── my_application.h (<1 KB)
+│   ├── macos
+│   │   ├── Flutter
+│   │   │   ├── Flutter-Debug.xcconfig (<1 KB)
+│   │   │   ├── Flutter-Release.xcconfig (<1 KB)
+│   │   │   └── GeneratedPluginRegistrant.swift (<1 KB)
+│   │   ├── Runner
+│   │   │   ├── AppDelegate.swift (<1 KB)
+│   │   │   ├── Assets.xcassets
+│   │   │   │   └── AppIcon.appiconset
+│   │   │   │       ├── Contents.json (1 KB)
+│   │   │   │       ├── app_icon_1024.png (100 KB)
+│   │   │   │       ├── app_icon_128.png (5 KB)
+│   │   │   │       ├── app_icon_16.png (<1 KB)
+│   │   │   │       ├── app_icon_256.png (13 KB)
+│   │   │   │       ├── app_icon_32.png (1 KB)
+│   │   │   │       ├── app_icon_512.png (35 KB)
+│   │   │   │       └── app_icon_64.png (2 KB)
+│   │   │   ├── Base.lproj
+│   │   │   │   └── MainMenu.xib (23 KB)
+│   │   │   ├── Configs
+│   │   │   │   ├── AppInfo.xcconfig (<1 KB)
+│   │   │   │   ├── Debug.xcconfig (<1 KB)
+│   │   │   │   ├── Release.xcconfig (<1 KB)
+│   │   │   │   └── Warnings.xcconfig (<1 KB)
+│   │   │   ├── DebugProfile.entitlements (<1 KB)
+│   │   │   ├── Info.plist (1 KB)
+│   │   │   ├── MainFlutterWindow.swift (<1 KB)
+│   │   │   └── Release.entitlements (<1 KB)
+│   │   ├── Runner.xcodeproj
+│   │   │   ├── project.pbxproj (26 KB)
+│   │   │   ├── project.xcworkspace
+│   │   │   │   └── xcshareddata
+│   │   │   │       └── IDEWorkspaceChecks.plist (<1 KB)
+│   │   │   └── xcshareddata
+│   │   │       └── xcschemes
+│   │   │           └── Runner.xcscheme (3 KB)
+│   │   ├── Runner.xcworkspace
+│   │   │   ├── contents.xcworkspacedata (<1 KB)
+│   │   │   └── xcshareddata
+│   │   │       └── IDEWorkspaceChecks.plist (<1 KB)
+│   │   └── RunnerTests
+│   │       └── RunnerTests.swift (<1 KB)
+│   ├── pubspec.yaml (4 KB)
+│   ├── test
+│   │   └── widget_test.dart (1 KB)
+│   ├── web
+│   │   ├── favicon.png (<1 KB)
+│   │   ├── icons
+│   │   │   ├── Icon-192.png (5 KB)
+│   │   │   ├── Icon-512.png (8 KB)
+│   │   │   ├── Icon-maskable-192.png (5 KB)
+│   │   │   └── Icon-maskable-512.png (20 KB)
+│   │   ├── index.html (1 KB)
+│   │   └── manifest.json (<1 KB)
+│   └── windows
+│       ├── CMakeLists.txt (4 KB)
+│       ├── flutter
+│       │   ├── CMakeLists.txt (3 KB)
+│       │   ├── generated_plugin_registrant.cc (<1 KB)
+│       │   ├── generated_plugin_registrant.h (<1 KB)
+│       │   └── generated_plugins.cmake (<1 KB)
+│       └── runner
+│           ├── CMakeLists.txt (1 KB)
+│           ├── Runner.rc (3 KB)
+│           ├── flutter_window.cpp (2 KB)
+│           ├── flutter_window.h (<1 KB)
+│           ├── main.cpp (1 KB)
+│           ├── resource.h (<1 KB)
+│           ├── resources
+│           │   └── app_icon.ico (32 KB)
+│           ├── runner.exe.manifest (<1 KB)
+│           ├── utils.cpp (1 KB)
+│           ├── utils.h (<1 KB)
+│           ├── win32_window.cpp (8 KB)
+│           └── win32_window.h (3 KB)
+├── ios
+│   ├── Flutter
+│   │   ├── AppFrameworkInfo.plist (<1 KB)
+│   │   ├── Debug.xcconfig (<1 KB)
+│   │   └── Release.xcconfig (<1 KB)
+│   ├── Runner
+│   │   ├── AppDelegate.swift (<1 KB)
+│   │   ├── Assets.xcassets
+│   │   │   ├── AppIcon.appiconset
+│   │   │   │   ├── Contents.json (2 KB)
+│   │   │   │   ├── Icon-App-1024x1024@1x.png (10 KB)
+│   │   │   │   ├── Icon-App-20x20@1x.png (<1 KB)
+│   │   │   │   ├── Icon-App-20x20@2x.png (<1 KB)
+│   │   │   │   ├── Icon-App-20x20@3x.png (<1 KB)
+│   │   │   │   ├── Icon-App-29x29@1x.png (<1 KB)
+│   │   │   │   ├── Icon-App-29x29@2x.png (<1 KB)
+│   │   │   │   ├── Icon-App-29x29@3x.png (<1 KB)
+│   │   │   │   ├── Icon-App-40x40@1x.png (<1 KB)
+│   │   │   │   ├── Icon-App-40x40@2x.png (<1 KB)
+│   │   │   │   ├── Icon-App-40x40@3x.png (<1 KB)
+│   │   │   │   ├── Icon-App-60x60@2x.png (<1 KB)
+│   │   │   │   ├── Icon-App-60x60@3x.png (1 KB)
+│   │   │   │   ├── Icon-App-76x76@1x.png (<1 KB)
+│   │   │   │   ├── Icon-App-76x76@2x.png (1 KB)
+│   │   │   │   └── Icon-App-83.5x83.5@2x.png (1 KB)
+│   │   │   └── LaunchImage.imageset
+│   │   │       ├── Contents.json (<1 KB)
+│   │   │       ├── LaunchImage.png (<1 KB)
+│   │   │       ├── LaunchImage@2x.png (<1 KB)
+│   │   │       ├── LaunchImage@3x.png (<1 KB)
+│   │   │       └── README.md (<1 KB)
+│   │   ├── Base.lproj
+│   │   │   ├── LaunchScreen.storyboard (2 KB)
+│   │   │   └── Main.storyboard (1 KB)
+│   │   ├── Info.plist (2 KB)
+│   │   ├── Runner-Bridging-Header.h (<1 KB)
+│   │   └── SceneDelegate.swift (<1 KB)
+│   ├── Runner.xcodeproj
+│   │   ├── project.pbxproj (24 KB)
+│   │   ├── project.xcworkspace
+│   │   │   ├── contents.xcworkspacedata (<1 KB)
+│   │   │   └── xcshareddata
+│   │   │       ├── IDEWorkspaceChecks.plist (<1 KB)
+│   │   │       └── WorkspaceSettings.xcsettings (<1 KB)
+│   │   └── xcshareddata
+│   │       └── xcschemes
+│   │           └── Runner.xcscheme (3 KB)
+│   ├── Runner.xcworkspace
+│   │   ├── contents.xcworkspacedata (<1 KB)
+│   │   └── xcshareddata
+│   │       ├── IDEWorkspaceChecks.plist (<1 KB)
+│   │       └── WorkspaceSettings.xcsettings (<1 KB)
+│   └── RunnerTests
+│       └── RunnerTests.swift (<1 KB)
+├── lib
+│   ├── drawing_engine.dart (1 KB)
+│   ├── industrial_drawing_flutter.dart (<1 KB)
+│   └── src
+│       ├── controllers
+│       │   └── drawing_controller.dart (27 KB)
+│       ├── helpers
+│       │   ├── shape_recognition.dart (4 KB)
+│       │   └── snap_helpers.dart (2 KB)
+│       ├── models
+│       │   ├── drawn_shape.dart (8 KB)
+│       │   └── enums.dart (<1 KB)
+│       ├── painters
+│       │   └── drawing_painter.dart (16 KB)
+│       └── widgets
+│           ├── canvas.dart (1 KB)
+│           ├── canvas_controls.dart (4 KB)
+│           ├── drawing_header.dart (5 KB)
+│           ├── drawing_toolbar.dart (7 KB)
+│           └── property_panel.dart (16 KB)
+├── linux
+│   ├── CMakeLists.txt (4 KB)
+│   ├── flutter
+│   │   ├── CMakeLists.txt (2 KB)
+│   │   ├── generated_plugin_registrant.cc (<1 KB)
+│   │   ├── generated_plugin_registrant.h (<1 KB)
+│   │   └── generated_plugins.cmake (<1 KB)
+│   └── runner
+│       ├── CMakeLists.txt (<1 KB)
+│       ├── main.cc (<1 KB)
+│       ├── my_application.cc (5 KB)
+│       └── my_application.h (<1 KB)
+├── log.txt (<1 KB)
+├── macos
+│   ├── Flutter
+│   │   ├── Flutter-Debug.xcconfig (<1 KB)
+│   │   ├── Flutter-Release.xcconfig (<1 KB)
+│   │   └── GeneratedPluginRegistrant.swift (<1 KB)
+│   ├── Runner
+│   │   ├── AppDelegate.swift (<1 KB)
+│   │   ├── Assets.xcassets
+│   │   │   └── AppIcon.appiconset
+│   │   │       ├── Contents.json (1 KB)
+│   │   │       ├── app_icon_1024.png (100 KB)
+│   │   │       ├── app_icon_128.png (5 KB)
+│   │   │       ├── app_icon_16.png (<1 KB)
+│   │   │       ├── app_icon_256.png (13 KB)
+│   │   │       ├── app_icon_32.png (1 KB)
+│   │   │       ├── app_icon_512.png (35 KB)
+│   │   │       └── app_icon_64.png (2 KB)
+│   │   ├── Base.lproj
+│   │   │   └── MainMenu.xib (23 KB)
+│   │   ├── Configs
+│   │   │   ├── AppInfo.xcconfig (<1 KB)
+│   │   │   ├── Debug.xcconfig (<1 KB)
+│   │   │   ├── Release.xcconfig (<1 KB)
+│   │   │   └── Warnings.xcconfig (<1 KB)
+│   │   ├── DebugProfile.entitlements (<1 KB)
+│   │   ├── Info.plist (1 KB)
+│   │   ├── MainFlutterWindow.swift (<1 KB)
+│   │   └── Release.entitlements (<1 KB)
+│   ├── Runner.xcodeproj
+│   │   ├── project.pbxproj (26 KB)
+│   │   ├── project.xcworkspace
+│   │   │   └── xcshareddata
+│   │   │       └── IDEWorkspaceChecks.plist (<1 KB)
+│   │   └── xcshareddata
+│   │       └── xcschemes
+│   │           └── Runner.xcscheme (3 KB)
+│   ├── Runner.xcworkspace
+│   │   ├── contents.xcworkspacedata (<1 KB)
+│   │   └── xcshareddata
+│   │       └── IDEWorkspaceChecks.plist (<1 KB)
+│   └── RunnerTests
+│       └── RunnerTests.swift (<1 KB)
+├── publish_log.txt (41 KB)
+├── pubspec.yaml (3 KB)
+├── test
+│   └── widget_test.dart (<1 KB)
+├── web
+│   ├── favicon.png (<1 KB)
+│   ├── icons
+│   │   ├── Icon-192.png (5 KB)
+│   │   ├── Icon-512.png (8 KB)
+│   │   ├── Icon-maskable-192.png (5 KB)
+│   │   └── Icon-maskable-512.png (20 KB)
+│   ├── index.html (1 KB)
+│   └── manifest.json (<1 KB)
+└── windows
+    ├── CMakeLists.txt (4 KB)
+    ├── flutter
+    │   ├── CMakeLists.txt (3 KB)
+    │   ├── generated_plugin_registrant.cc (<1 KB)
+    │   ├── generated_plugin_registrant.h (<1 KB)
+    │   └── generated_plugins.cmake (<1 KB)
+    └── runner
+        ├── CMakeLists.txt (1 KB)
+        ├── Runner.rc (3 KB)
+        ├── flutter_window.cpp (2 KB)
+        ├── flutter_window.h (<1 KB)
+        ├── main.cpp (1 KB)
+        ├── resource.h (<1 KB)
+        ├── resources
+        │   └── app_icon.ico (32 KB)
+        ├── runner.exe.manifest (<1 KB)
+        ├── utils.cpp (1 KB)
+        ├── utils.h (<1 KB)
+        ├── win32_window.cpp (8 KB)
+        └── win32_window.h (3 KB)
+
+Total compressed archive size: 620 KB.
+Validating package...
+Package validation found the following 2 potential issues:
+* 2 checked-in files are ignored by a `.gitignore`.
+  Previous versions of Pub would include those in the published package.
+  
+  Consider adjusting your `.gitignore` files to not ignore those files, and if you do not wish to
+  publish these files use `.pubignore`. See also dart.dev/go/pubignore
+  
+  Files that are checked in while gitignored:
+  
+  lib/Drawing.dart
+  lib/main.dart
+  
+  
+
+* 1 checked-in file is modified in git.
+  
+  Usually you want to publish from a clean git state.
+  
+  Consider committing these files or reverting the changes.
+  
+  Modified files:
+  
+  pubspec.yaml
+  
+  Run `git status` for more information.
+  
+The server may enforce additional checks.
+
+Package has 2 warnings.
+Failed to update packages.
