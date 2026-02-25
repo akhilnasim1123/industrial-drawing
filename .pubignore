@@ -12,3 +12,8 @@ example/macos/
 example/windows/
 example/web/
 test/
+build/
+.dart_tool/
+.idea/
+.vscode/
+
