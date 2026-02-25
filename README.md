@@ -1,7 +1,7 @@
 # Industrial Drawing Flutter 🎨
 
 [![Pub Version](https://img.shields.io/pub/v/industrial_drawing_flutter?style=for-the-badge)](https://pub.dev/packages/industrial_drawing_flutter)
-[![License](https://img.shields.io/github/license/Akhil/industrial_drawing_flutter?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/github/license/akhilnasim1123/industrial-drawing?style=for-the-badge)](LICENSE)
 [![Flutter SDK](https://img.shields.io/badge/Flutter-%5E3.10.0-blue?style=for-the-badge&logo=flutter)](https://flutter.dev)
 
 A high-performance, production-ready vector drawing engine for Flutter. Designed for industrial applications, engineering tools, and creative whiteboards. Built with a modular architecture that separates the rendering engine from the UI.
