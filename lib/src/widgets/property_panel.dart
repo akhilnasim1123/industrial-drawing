@@ -437,7 +437,9 @@ class PropertyPanel extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(title, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: Colors.white.withOpacity(0.5))),
+                  Expanded(
+                    child: Text(title, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: Colors.white.withOpacity(0.5)), overflow: TextOverflow.ellipsis),
+                  ),
                   Material(
                     color: Colors.transparent,
                     child: InkWell(

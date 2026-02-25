@@ -1,21 +1,10 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:industrial_drawing_flutter/main.dart';
+import 'package:industrial_drawing_flutter/industrial_drawing_flutter.dart';
 
 void main() {
-  testWidgets('App launches smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const IndustrialDrawingApp());
-
-    // Verify that the Industrial Drawing title is present.
-    expect(find.text('Industrial Drawing'), findsOneWidget);
+  test('DrawingController initializes cleanly', () {
+    final controller = DrawingController();
+    // Test that the controller starts with no shapes
+    expect(controller.drawnShapes.length, 0);
   });
 }

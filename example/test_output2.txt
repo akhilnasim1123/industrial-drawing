@@ -1,0 +1,38 @@
+00:00 +0: loading D:/Akhil/industrial_drawing_flutter/example/test/widget_test.dart
+00:00 +0: App launches smoke test
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 2.2 pixels on the right.
+
+The relevant error-causing widget was:
+  Row Row:file:///D:/Akhil/industrial_drawing_flutter/lib/src/widgets/property_panel.dart:437:15
+
+The overflowing RenderFlex has an orientation of Axis.horizontal.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#62cab relayoutBoundary=up10 OVERFLOWING:
+  creator: Row ← Column ← Padding ← DecoratedBox ← ConstrainedBox ← Container ← BackdropFilter ←
+    ClipRRect ← ListenableBuilder ← PropertyPanel ← Positioned ← Stack ← ⋯
+  parentData: offset=Offset(0.0, 0.0); flex=null; fit=null (can use size)
+  constraints: BoxConstraints(w=145.0, 0.0<=h<=Infinity)
+  size: Size(145.0, 24.0)
+  direction: horizontal
+  mainAxisAlignment: spaceBetween
+  mainAxisSize: max
+  crossAxisAlignment: center
+  textDirection: ltr
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -1: App launches smoke test [E]
+  Test failed. See exception logs above.
+  The test description was: App launches smoke test
+  
+00:00 +0 -1: Some tests failed.

@@ -102,7 +102,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
             onPressed: () {
               _controller.saveStateForUndo();
               _controller.selectedShape!.color = temp;
-              _controller.notifyListeners();
+              _controller.updateState();
               Navigator.pop(ctx);
             },
             style: FilledButton.styleFrom(backgroundColor: const Color(0xFF4361EE)),
@@ -142,7 +142,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
                 if (tc.text.isEmpty) return;
                 _controller.saveStateForUndo();
                 _controller.drawnShapes.add(DrawnShape(position, position, ShapeType.text, texts: {"Center": tc.text}, textPositions: {"Center": position}, color: _controller.strokeColor, strokeWidth: _controller.strokeWidth, fontSize: fontSize));
-                _controller.notifyListeners();
+                _controller.updateState();
                 Navigator.pop(ctx);
               },
               style: FilledButton.styleFrom(backgroundColor: const Color(0xFF4361EE)),
@@ -214,7 +214,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
                   default: offset = rect.center;
                 }
                 shape.textPositions[selectedSide] = offset;
-                _controller.notifyListeners();
+                _controller.updateState();
                 Navigator.pop(ctx);
               },
               style: FilledButton.styleFrom(backgroundColor: const Color(0xFF4361EE)),
