@@ -27,7 +27,7 @@
 /// // In your widget tree:
 /// DrawingCanvas(controller: controller, canvasKey: GlobalKey())
 /// ```
-library drawing_engine;
+library;
 
 // Models
 export 'src/models/enums.dart';

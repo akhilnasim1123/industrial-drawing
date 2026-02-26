@@ -106,7 +106,7 @@ class DrawingPainter extends CustomPainter {
 
     // Preview shape while drawing
     if (isDrawing && start != null && end != null && currentTool == Tool.draw && currentShape != ShapeType.freehand) {
-      _drawShape(canvas, DrawnShape(start!, end!, currentShape, color: color.withOpacity(0.5), strokeWidth: strokeWidth, mode: mode));
+      _drawShape(canvas, DrawnShape(start!, end!, currentShape, color: color.withValues(alpha: 0.5), strokeWidth: strokeWidth, mode: mode));
     }
 
     // Measurement line
@@ -138,7 +138,7 @@ class DrawingPainter extends CustomPainter {
 
   void _drawShape(Canvas canvas, DrawnShape s) {
     final paint = Paint()
-      ..color = s.color.withOpacity(s.opacity)
+      ..color = s.color.withValues(alpha: s.opacity)
       ..strokeWidth = s.strokeWidth
       ..style = s.mode == DrawMode.fill ? PaintingStyle.fill : PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
@@ -320,15 +320,15 @@ class DrawingPainter extends CustomPainter {
     // Distance label
     final dist = (s.end - s.start).distance;
     final mid = Offset((s.start.dx + s.end.dx) / 2, (s.start.dy + s.end.dy) / 2);
-    _drawText(canvas, Offset(mid.dx, mid.dy - 16), "${dist.toStringAsFixed(1)}", paint.color, 11, FontStyle.normal, FontWeight.w500);
+    _drawText(canvas, Offset(mid.dx, mid.dy - 16), dist.toStringAsFixed(1), paint.color, 11, FontStyle.normal, FontWeight.w500);
   }
 
   void _drawEraserCursor(Canvas canvas) {
     final cursorPaint = Paint()
-      ..color = Colors.red.withOpacity(0.2)
+      ..color = Colors.red.withValues(alpha: 0.2)
       ..style = PaintingStyle.fill;
     final borderPaint = Paint()
-      ..color = Colors.red.withOpacity(0.5)
+      ..color = Colors.red.withValues(alpha: 0.5)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
     canvas.drawCircle(eraserPosition!, eraserRadius, cursorPaint);
@@ -352,7 +352,7 @@ class DrawingPainter extends CustomPainter {
 
   void _drawSelectionIndicator(Canvas canvas, DrawnShape s) {
     final strokePaint = Paint()..color = Colors.blue..strokeWidth = 1.5..style = PaintingStyle.stroke;
-    final glowPaint = Paint()..color = Colors.blue.withOpacity(0.2)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4)..style = PaintingStyle.stroke..strokeWidth = 3;
+    final glowPaint = Paint()..color = Colors.blue.withValues(alpha: 0.2)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4)..style = PaintingStyle.stroke..strokeWidth = 3;
 
     Rect bounds;
     if (s.type == ShapeType.freehand && s.pathPoints != null && s.pathPoints!.isNotEmpty) {
@@ -397,7 +397,7 @@ class DrawingPainter extends CustomPainter {
     if (s.texts.isNotEmpty && s.type != ShapeType.text) {
       s.texts.forEach((key, _) {
         final pos = s.textPositions[key] ?? s.start;
-        canvas.drawLine(boundsCenter, pos, Paint()..color = Colors.blue.withOpacity(0.5)..strokeWidth = 1.5);
+        canvas.drawLine(boundsCenter, pos, Paint()..color = Colors.blue.withValues(alpha: 0.5)..strokeWidth = 1.5);
         canvas.drawCircle(pos, handleRadius, hPaint);
       });
     }

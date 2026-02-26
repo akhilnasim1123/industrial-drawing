@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use, unused_element, unused_local_variable, use_build_context_synchronously
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -382,10 +383,10 @@ class _DrawingScreenState extends State<DrawingScreen> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.6),
+                              color: Colors.black.withValues(alpha: 0.6),
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Colors.white.withOpacity(0.1)),
-                              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 10)],
+                              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 10)],
                             ),
                             child: Text(
                               "📏 ${_controller.measurementValue}", 
@@ -453,23 +454,23 @@ class _DrawingScreenState extends State<DrawingScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.6),
+            color: Colors.black.withValues(alpha: 0.6),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.15)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
             boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, 4))
+              BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 10, offset: const Offset(0, 4))
             ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               ..._controller.suggestedShapes!.map((type) => IconButton(
-                icon: Icon(_iconForShape(type), size: 20, color: Colors.white.withOpacity(0.9)),
+                icon: Icon(_iconForShape(type), size: 20, color: Colors.white.withValues(alpha: 0.9)),
                 tooltip: type.name,
                 onPressed: () => _controller.acceptSuggestion(type),
                 splashRadius: 18,
               )),
-              Container(width: 1, height: 20, color: Colors.white.withOpacity(0.2), margin: const EdgeInsets.symmetric(horizontal: 4)),
+              Container(width: 1, height: 20, color: Colors.white.withValues(alpha: 0.2), margin: const EdgeInsets.symmetric(horizontal: 4)),
               IconButton(
                 icon: const Icon(Icons.close_rounded, size: 18, color: Color(0xFFF87171)),
                 onPressed: _controller.discardSuggestion,

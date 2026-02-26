@@ -1,8 +1,8 @@
+// ignore_for_file: deprecated_member_use, unused_element, unused_local_variable, use_build_context_synchronously
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -274,7 +274,7 @@ class _DrawingAppState extends State<DrawingApp> {
   DrawnShape? _selectedShape;
   Offset? _selectionStartPoint;
   Offset? _lastLineEndPoint;
-  bool _smoothFreehand = false;
+  final bool _smoothFreehand = false;
   Timer? _straightenTimer;
   String _measurementValue = '';
   final GlobalKey canvasKey = GlobalKey();
@@ -411,7 +411,9 @@ class _DrawingAppState extends State<DrawingApp> {
   void _resizeSelectedShape(Offset currentPosition) {
     if (_selectedShape == null ||
         _initialResizeShape == null ||
-        _resizeStartPoint == null) return;
+        _resizeStartPoint == null) {
+      return;
+    }
 
     final delta = currentPosition - _resizeStartPoint!;
 
@@ -779,13 +781,16 @@ class _DrawingAppState extends State<DrawingApp> {
     final isClosed = startEndDist < 50;
 
     if (isClosed) {
-      if (!suggestions.contains(ShapeType.circle))
+      if (!suggestions.contains(ShapeType.circle)) {
         suggestions.add(ShapeType.circle);
-      if (!suggestions.contains(ShapeType.rectangle))
+      }
+      if (!suggestions.contains(ShapeType.rectangle)) {
         suggestions.add(ShapeType.rectangle);
+      }
     } else {
-      if (!suggestions.contains(ShapeType.line))
+      if (!suggestions.contains(ShapeType.line)) {
         suggestions.add(ShapeType.line);
+      }
     }
 
     if (suggestions.isNotEmpty) {
@@ -1270,10 +1275,8 @@ class _DrawingAppState extends State<DrawingApp> {
           selectedSide = "Center";
       }
 
-      if (selectedSide != null) {
-        textController.text = existingTexts?[selectedSide] ?? "";
-      }
-    }
+      textController.text = existingTexts[selectedSide] ?? "";
+        }
 
     showDialog(
       context: context,
@@ -1465,9 +1468,7 @@ class _DrawingAppState extends State<DrawingApp> {
 
     // Set initial text for selected side
     final textController = TextEditingController(
-        text: selectedSide != null
-            ? _selectedShape!.texts[selectedSide] ?? ""
-            : "");
+        text: _selectedShape!.texts[selectedSide] ?? "");
 
     showDialog(
       context: context,
@@ -1519,12 +1520,12 @@ class _DrawingAppState extends State<DrawingApp> {
                             : Colors.black54,
                       ),
                       style: ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(
+                        backgroundColor: WidgetStatePropertyAll(
                           selectedSide == pos
                               ? const Color(0x6E3D9FF0)
                               : Colors.white,
                         ),
-                        shape: MaterialStatePropertyAll(
+                        shape: WidgetStatePropertyAll(
                           RoundedRectangleBorder(
                             side: const BorderSide(
                               width: 1,
@@ -1857,11 +1858,11 @@ class _DrawingAppState extends State<DrawingApp> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text("Clear All"),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
+            child: const Text("Clear All"),
           ),
         ],
       ),
@@ -2151,7 +2152,7 @@ class _DrawingAppState extends State<DrawingApp> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 5,
             offset: const Offset(0, 2),
           ),
@@ -2273,11 +2274,11 @@ class _DrawingAppState extends State<DrawingApp> {
         child: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: isActive ? Colors.blue.withOpacity(0.1) : Colors.white,
+            color: isActive ? Colors.blue.withValues(alpha: 0.1) : Colors.white,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 5,
                 spreadRadius: 1,
               ),
@@ -2327,7 +2328,7 @@ class _DrawingAppState extends State<DrawingApp> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             offset: const Offset(0, -2),
             blurRadius: 10,
           ),
@@ -2392,7 +2393,7 @@ class _DrawingAppState extends State<DrawingApp> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -2476,7 +2477,7 @@ class _DrawingAppState extends State<DrawingApp> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -2643,11 +2644,11 @@ class _DrawingAppState extends State<DrawingApp> {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: isSelected
-                ? const Color(0xff1F63E2).withOpacity(0.1)
+                ? const Color(0xff1F63E2).withValues(alpha: 0.1)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: isSelected
-                ? Border.all(color: const Color(0xff1F63E2).withOpacity(0.3))
+                ? Border.all(color: const Color(0xff1F63E2).withValues(alpha: 0.3))
                 : null,
           ),
           child: Icon(icon,
@@ -2675,11 +2676,11 @@ class _DrawingAppState extends State<DrawingApp> {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: isSelected
-                ? const Color(0xff1F63E2).withOpacity(0.1)
+                ? const Color(0xff1F63E2).withValues(alpha: 0.1)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: isSelected
-                ? Border.all(color: const Color(0xff1F63E2).withOpacity(0.3))
+                ? Border.all(color: const Color(0xff1F63E2).withValues(alpha: 0.3))
                 : null,
           ),
           child: Icon(icon,
@@ -2705,7 +2706,6 @@ class _DrawingAppState extends State<DrawingApp> {
                 _selectedShape!.color = shapeColor;
                 _selectedShape!.mode = DrawMode.fill;
               }
-              ;
             }),
           ),
         ),
@@ -2817,7 +2817,7 @@ class DrawingPainter extends CustomPainter {
         start!,
         end!,
         currentShape,
-        color: color.withOpacity(0.5),
+        color: color.withValues(alpha: 0.5),
         strokeWidth: strokeWidth,
         mode: mode,
       );
@@ -3012,7 +3012,7 @@ class DrawingPainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
 
     final glowPaint = Paint()
-      ..color = Colors.blue.withOpacity(0.2)
+      ..color = Colors.blue.withValues(alpha: 0.2)
       ..maskFilter = MaskFilter.blur(BlurStyle.normal, 4)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3;
@@ -3091,7 +3091,7 @@ class DrawingPainter extends CustomPainter {
       s.texts.forEach((key, label) {
         final pos = s.textPositions[key] ?? s.start;
         final connectorPaint = Paint()
-          ..color = Colors.blue.withOpacity(0.5)
+          ..color = Colors.blue.withValues(alpha: 0.5)
           ..strokeWidth = 1.5;
         canvas.drawLine(center, pos, connectorPaint);
         canvas.drawCircle(pos, handleRadius, handlePaint);

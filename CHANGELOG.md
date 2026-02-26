@@ -1,3 +1,10 @@
+## 1.0.3
+
+* Fixed all lints across the codebase (replaced deprecated APIs, resolved `withOpacity` vs `withValues` precision warnings).
+* Cleaned up redundant imports and trailing directives.
+* Formatted pubspec description to satisfy pub.dev best practices.
+* Removed warnings inside the example project directory.
+
 ## 1.0.2
 
 * Updated repository links and documentation.

@@ -20,11 +20,11 @@ class CanvasControls extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.4),
+                color: Colors.black.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withOpacity(0.15), width: 1.5),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.15), width: 1.5),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, 4))
+                  BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 10, offset: const Offset(0, 4))
                 ],
               ),
               child: Column(
@@ -36,7 +36,7 @@ class CanvasControls extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1), 
+                      color: Colors.white.withValues(alpha: 0.1), 
                       borderRadius: BorderRadius.circular(8)
                     ),
                     child: Text(
@@ -48,7 +48,7 @@ class CanvasControls extends StatelessWidget {
                   _btn(icon: Icons.remove_rounded, onTap: controller.zoomOut, tooltip: "Zoom Out"),
                   Container(
                     height: 1, width: 24, 
-                    color: Colors.white.withOpacity(0.15), 
+                    color: Colors.white.withValues(alpha: 0.15), 
                     margin: const EdgeInsets.symmetric(vertical: 10)
                   ),
                   _btn(icon: Icons.center_focus_strong_rounded, onTap: controller.resetView, tooltip: "Reset View"),
@@ -94,7 +94,7 @@ class CanvasControls extends StatelessWidget {
     return Tooltip(
       message: tooltip ?? '',
       child: Material(
-        color: isActive ? activeColor.withOpacity(0.2) : Colors.transparent,
+        color: isActive ? activeColor.withValues(alpha: 0.2) : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
@@ -102,13 +102,13 @@ class CanvasControls extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(10),
             decoration: isActive ? BoxDecoration(
-              border: Border.all(color: activeColor.withOpacity(0.5)),
+              border: Border.all(color: activeColor.withValues(alpha: 0.5)),
               borderRadius: BorderRadius.circular(12),
             ) : null,
             child: Icon(
               icon, 
               size: 20, 
-              color: isActive ? activeColor : Colors.white.withOpacity(0.7)
+              color: isActive ? activeColor : Colors.white.withValues(alpha: 0.7)
             ),
           ),
         ),

@@ -1,6 +1,6 @@
 name: industrial_drawing_flutter
-description: A high-performance, production-ready vector drawing engine for Flutter. Designed for industrial applications, engineering tools, and creative whiteboards. Built with a modular architecture that separates the rendering engine from the UI.
-version: 1.0.2
+description: A high-performance, production-ready vector drawing engine for Flutter. Designed for industrial applications and engineering tools.
+version: 1.0.3
 homepage: https://github.com/akhilnasim1123/industrial-drawing
 repository: https://github.com/akhilnasim1123/industrial-drawing
 

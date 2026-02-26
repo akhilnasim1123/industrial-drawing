@@ -70,7 +70,7 @@ class PropertyPanel extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFFEF4444).withOpacity(0.15),
+              color: const Color(0xFFEF4444).withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.auto_fix_normal_rounded, color: Color(0xFFEF4444), size: 28),
@@ -78,7 +78,7 @@ class PropertyPanel extends StatelessWidget {
           const SizedBox(height: 12),
           const Text("Eraser Active", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white)),
           const SizedBox(height: 4),
-          Text("Swipe over shapes\nto erase them.", textAlign: TextAlign.center, style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.5))),
+          Text("Swipe over shapes\nto erase them.", textAlign: TextAlign.center, style: TextStyle(fontSize: 10, color: Colors.white.withValues(alpha: 0.5))),
         ],
       ),
     );
@@ -171,7 +171,7 @@ class PropertyPanel extends StatelessWidget {
     
     return Column(
       children: [
-        Text("GEOMETRY", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: Colors.white.withOpacity(0.4))),
+        Text("GEOMETRY", style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: Colors.white.withValues(alpha: 0.4))),
         const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -203,13 +203,13 @@ class PropertyPanel extends StatelessWidget {
       width: 60,
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08), 
+        color: Colors.white.withValues(alpha: 0.08), 
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.white.withOpacity(0.1))
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1))
       ),
       child: Row(
         children: [
-          Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white.withOpacity(0.5))),
+          Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white.withValues(alpha: 0.5))),
           const SizedBox(width: 6),
           Expanded(
             child: TextField(
@@ -233,10 +233,10 @@ class PropertyPanel extends StatelessWidget {
         decoration: BoxDecoration(
           color: color,
           shape: BoxShape.circle,
-          border: Border.all(color: Colors.white.withOpacity(0.8), width: 2.5),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.8), width: 2.5),
           boxShadow: [
-            BoxShadow(color: color.withOpacity(0.4), blurRadius: 10, offset: const Offset(0, 4)),
-            BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 4, offset: const Offset(0, 2))
+            BoxShadow(color: color.withValues(alpha: 0.4), blurRadius: 10, offset: const Offset(0, 4)),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 2))
           ],
         ),
       ),
@@ -246,9 +246,9 @@ class PropertyPanel extends StatelessWidget {
   Widget _modeToggle() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08), 
+        color: Colors.white.withValues(alpha: 0.08), 
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.1))
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1))
       ),
       padding: const EdgeInsets.all(4),
       child: Row(
@@ -265,14 +265,14 @@ class PropertyPanel extends StatelessWidget {
     return Tooltip(
       message: tooltip,
       child: Material(
-        color: isActive ? Colors.white.withOpacity(0.2) : Colors.transparent,
+        color: isActive ? Colors.white.withValues(alpha: 0.2) : Colors.transparent,
         borderRadius: BorderRadius.circular(8),
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(8), 
-            child: Icon(icon, size: 18, color: isActive ? Colors.white : Colors.white.withOpacity(0.5))
+            child: Icon(icon, size: 18, color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.5))
           ),
         ),
       ),
@@ -295,7 +295,7 @@ class PropertyPanel extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(label, style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.6), fontWeight: FontWeight.bold)),
+              Text(label, style: TextStyle(fontSize: 10, color: Colors.white.withValues(alpha: 0.6), fontWeight: FontWeight.bold)),
               Text(displayValue ?? value.toInt().toString(), style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold)),
             ],
           ),
@@ -307,9 +307,9 @@ class PropertyPanel extends StatelessWidget {
                 trackHeight: 3, 
                 thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
                 activeTrackColor: const Color(0xFF3B82F6),
-                inactiveTrackColor: Colors.white.withOpacity(0.1),
+                inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
                 thumbColor: Colors.white,
-                overlayColor: const Color(0xFF3B82F6).withOpacity(0.2)
+                overlayColor: const Color(0xFF3B82F6).withValues(alpha: 0.2)
               ),
               child: Slider(value: value, min: min, max: max, onChanged: onChanged),
             ),
@@ -323,9 +323,9 @@ class PropertyPanel extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08), 
+        color: Colors.white.withValues(alpha: 0.08), 
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.1))
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1))
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -348,11 +348,11 @@ class PropertyPanel extends StatelessWidget {
           duration: const Duration(milliseconds: 150),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           decoration: BoxDecoration(
-            color: isActive ? const Color(0xFF3B82F6).withOpacity(0.3) : Colors.transparent,
+            color: isActive ? const Color(0xFF3B82F6).withValues(alpha: 0.3) : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: isActive ? const Color(0xFF3B82F6).withOpacity(0.5) : Colors.transparent)
+            border: Border.all(color: isActive ? const Color(0xFF3B82F6).withValues(alpha: 0.5) : Colors.transparent)
           ),
-          child: Icon(icon, size: 16, color: isActive ? const Color(0xFF60A5FA) : Colors.white.withOpacity(0.5)),
+          child: Icon(icon, size: 16, color: isActive ? const Color(0xFF60A5FA) : Colors.white.withValues(alpha: 0.5)),
         ),
       ),
     );
@@ -362,8 +362,8 @@ class PropertyPanel extends StatelessWidget {
     return Tooltip(
       message: tooltip,
       child: Material(
-        color: Colors.white.withOpacity(0.08),
-        shape: CircleBorder(side: BorderSide(color: Colors.white.withOpacity(0.1))),
+        color: Colors.white.withValues(alpha: 0.08),
+        shape: CircleBorder(side: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
         child: InkWell(
           customBorder: const CircleBorder(),
           onTap: onTap,
@@ -371,7 +371,7 @@ class PropertyPanel extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: Transform.rotate(
               angle: rotateIcon ? 1.5708 : 0, 
-              child: Icon(icon, size: 18, color: Colors.white.withOpacity(0.8)),
+              child: Icon(icon, size: 18, color: Colors.white.withValues(alpha: 0.8)),
             ),
           ),
         ),
@@ -381,7 +381,7 @@ class PropertyPanel extends StatelessWidget {
 
   Widget _deleteBtn() {
     return Material(
-      color: const Color(0xFFEF4444).withOpacity(0.15),
+      color: const Color(0xFFEF4444).withValues(alpha: 0.15),
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
@@ -390,7 +390,7 @@ class PropertyPanel extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFFEF4444).withOpacity(0.3)),
+            border: Border.all(color: const Color(0xFFEF4444).withValues(alpha: 0.3)),
             borderRadius: BorderRadius.circular(12),
           ),
           child: const Row(
@@ -409,7 +409,7 @@ class PropertyPanel extends StatelessWidget {
   Widget _thinDivider() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12), 
-      child: Container(height: 1, width: double.infinity, color: Colors.white.withOpacity(0.1))
+      child: Container(height: 1, width: double.infinity, color: Colors.white.withValues(alpha: 0.1))
     );
   }
 
@@ -422,11 +422,11 @@ class PropertyPanel extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           width: 180, // slightly wider for better layout
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.55),
+            color: Colors.black.withValues(alpha: 0.55),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.white.withOpacity(0.15), width: 1.5),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.15), width: 1.5),
             boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 16, offset: const Offset(0, 8))
+              BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 16, offset: const Offset(0, 8))
             ],
           ),
           child: Column(
@@ -438,7 +438,7 @@ class PropertyPanel extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: Text(title, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: Colors.white.withOpacity(0.5)), overflow: TextOverflow.ellipsis),
+                    child: Text(title, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: Colors.white.withValues(alpha: 0.5)), overflow: TextOverflow.ellipsis),
                   ),
                   Material(
                     color: Colors.transparent,
@@ -447,7 +447,7 @@ class PropertyPanel extends StatelessWidget {
                       onTap: () => controller.showPropertyPanel = false,
                       child: Padding(
                         padding: const EdgeInsets.all(4),
-                        child: Icon(Icons.close_rounded, size: 16, color: Colors.white.withOpacity(0.6)),
+                        child: Icon(Icons.close_rounded, size: 16, color: Colors.white.withValues(alpha: 0.6)),
                       ),
                     ),
                   ),

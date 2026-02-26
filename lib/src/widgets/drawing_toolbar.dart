@@ -29,11 +29,11 @@ class DrawingToolbar extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.55),
+                  color: Colors.black.withValues(alpha: 0.55),
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Colors.white.withOpacity(0.15), width: 1.5),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.15), width: 1.5),
                   boxShadow: [
-                    BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 16, offset: const Offset(0, 8))
+                    BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 16, offset: const Offset(0, 8))
                   ],
                 ),
                 child: SingleChildScrollView(
@@ -92,7 +92,7 @@ class DrawingToolbar extends StatelessWidget {
           style: TextStyle(
             fontSize: 8, 
             fontWeight: FontWeight.w800, 
-            color: Colors.white.withOpacity(0.4), 
+            color: Colors.white.withValues(alpha: 0.4), 
             letterSpacing: 2.0
           )
         ),
@@ -104,7 +104,7 @@ class DrawingToolbar extends StatelessWidget {
     return Container(
       height: 36, 
       width: 1.5, 
-      color: Colors.white.withOpacity(0.15), 
+      color: Colors.white.withValues(alpha: 0.15), 
       margin: const EdgeInsets.symmetric(horizontal: 14)
     );
   }
@@ -153,14 +153,14 @@ class DrawingToolbar extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeOutCubic,
             decoration: BoxDecoration(
-              color: isActive ? activeColor.withOpacity(0.2) : Colors.transparent,
+              color: isActive ? activeColor.withValues(alpha: 0.2) : Colors.transparent,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isActive ? activeColor.withOpacity(0.6) : Colors.transparent,
+                color: isActive ? activeColor.withValues(alpha: 0.6) : Colors.transparent,
                 width: 1.5
               ),
               boxShadow: isActive ? [
-                BoxShadow(color: activeColor.withOpacity(0.25), blurRadius: 10, offset: const Offset(0, 2))
+                BoxShadow(color: activeColor.withValues(alpha: 0.25), blurRadius: 10, offset: const Offset(0, 2))
               ] : [],
             ),
             child: Material(
@@ -168,14 +168,14 @@ class DrawingToolbar extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
                 onTap: onTap,
-                splashColor: activeColor.withOpacity(0.3),
-                highlightColor: activeColor.withOpacity(0.1),
+                splashColor: activeColor.withValues(alpha: 0.3),
+                highlightColor: activeColor.withValues(alpha: 0.1),
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Icon(
                     icon, 
                     size: 22, 
-                    color: isActive ? activeColor : Colors.white.withOpacity(0.7)
+                    color: isActive ? activeColor : Colors.white.withValues(alpha: 0.7)
                   ),
                 ),
               ),
@@ -187,7 +187,7 @@ class DrawingToolbar extends StatelessWidget {
             style: TextStyle(
               fontSize: 10, 
               fontWeight: isActive ? FontWeight.w700 : FontWeight.w500, 
-              color: isActive ? activeColor : Colors.white.withOpacity(0.5)
+              color: isActive ? activeColor : Colors.white.withValues(alpha: 0.5)
             ),
             child: Text(label),
           ),

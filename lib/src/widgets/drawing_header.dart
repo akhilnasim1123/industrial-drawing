@@ -44,11 +44,11 @@ class DrawingHeader extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.4),
+                  color: Colors.black.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Colors.white.withOpacity(0.15), width: 1.5),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.15), width: 1.5),
                   boxShadow: [
-                    BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, 4))
+                    BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 10, offset: const Offset(0, 4))
                   ],
                 ),
                 child: Row(
@@ -86,9 +86,9 @@ class DrawingHeader extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       margin: const EdgeInsets.only(right: 12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
+                        color: Colors.white.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.white.withOpacity(0.1)),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                       ),
                       child: Text(
                         "${controller.drawnShapes.length}",
@@ -131,8 +131,8 @@ class DrawingHeader extends StatelessWidget {
   Widget _headerBtn({required IconData icon, VoidCallback? onTap, String? tooltip, bool destructive = false}) {
     final enabled = onTap != null;
     final color = destructive 
-        ? (enabled ? const Color(0xFFFF4D4D) : const Color(0xFFFF4D4D).withOpacity(0.3))
-        : (enabled ? Colors.white : Colors.white.withOpacity(0.3));
+        ? (enabled ? const Color(0xFFFF4D4D) : const Color(0xFFFF4D4D).withValues(alpha: 0.3))
+        : (enabled ? Colors.white : Colors.white.withValues(alpha: 0.3));
 
     return Tooltip(
       message: tooltip ?? '',
