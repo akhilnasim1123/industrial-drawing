@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Added screenshots to the package description on pub.dev and GitHub repository.
+
 ## 1.0.5
 
 * Added **Magnet Tool** — a sculpting brush that attracts shape vertices toward the cursor with configurable radius and strength.

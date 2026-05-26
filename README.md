@@ -8,6 +8,16 @@ A high-performance, production-ready vector drawing engine for Flutter. Designed
 
 ---
 
+## 📸 Showcase
+
+<p align="center">
+  <img src="screenshots/screenshot1.jpg" width="45%" alt="Drawing Canvas Grid View" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="screenshots/screenshot2.jpg" width="45%" alt="Selection & Properties Panel" />
+</p>
+
+---
+
 ## ✨ Features
 
 - 🛠 **Precision Tools**: Line, Rectangle, Circle, Triangle, and Freehand drawing.

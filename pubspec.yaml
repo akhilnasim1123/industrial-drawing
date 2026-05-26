@@ -1,8 +1,14 @@
 name: industrial_drawing_flutter
 description: A high-performance, production-ready vector drawing engine for Flutter. Designed for industrial applications and engineering tools.
-version: 1.0.5
+version: 1.0.6
 homepage: https://github.com/akhilnasim1123/industrial-drawing
 repository: https://github.com/akhilnasim1123/industrial-drawing
+
+screenshots:
+  - description: 'Drawing canvas with various tools and customizable grid background.'
+    path: screenshots/screenshot1.jpg
+  - description: 'Selection properties panel to customize shape stroke, opacity, and geometry.'
+    path: screenshots/screenshot2.jpg
 
 
 environment:
