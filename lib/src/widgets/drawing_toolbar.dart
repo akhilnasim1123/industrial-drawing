@@ -48,6 +48,7 @@ class DrawingToolbar extends StatelessWidget {
                       _toolBtn(Tool.pan, Icons.pan_tool_rounded, "Pan"),
                       _toolBtn(Tool.measure, Icons.straighten_rounded, "Measure"),
                       _toolBtn(Tool.eraser, Icons.auto_fix_normal, "Eraser"),
+                      _toolBtn(Tool.magnet, Icons.attractions_rounded, "Magnet"),
                       _divider(),
                       
                       _sectionLabel("BASIC"),
@@ -71,6 +72,8 @@ class DrawingToolbar extends StatelessWidget {
                       _shapeBtn(ShapeType.tShape, Icons.view_column_rounded, "T-Shape"),
                       _shapeBtn(ShapeType.uShape, Icons.video_label_rounded, "U-Shape"),
                       _shapeBtn(ShapeType.boxShape, Icons.check_box_outline_blank_rounded, "Box"),
+                      _shapeBtn(ShapeType.rake, Icons.grid_goldenratio_rounded, "Rake"),
+                      _shapeBtn(ShapeType.warp, Icons.transform_rounded, "Warp"),
                     ],
                   ),
                 ),

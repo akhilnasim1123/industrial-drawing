@@ -29,6 +29,7 @@ class PropertyPanel extends StatelessWidget {
 
         if (controller.currentTool == Tool.draw) return _buildDrawPanel();
         if (controller.currentTool == Tool.eraser) return _buildEraserPanel();
+        if (controller.currentTool == Tool.magnet) return _buildMagnetPanel();
         if (controller.selectedShape != null) return _buildSelectionPanel();
         return const SizedBox.shrink();
       },
@@ -79,6 +80,47 @@ class PropertyPanel extends StatelessWidget {
           const Text("Eraser Active", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white)),
           const SizedBox(height: 4),
           Text("Swipe over shapes\nto erase them.", textAlign: TextAlign.center, style: TextStyle(fontSize: 10, color: Colors.white.withValues(alpha: 0.5))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMagnetPanel() {
+    return _panelContainer(
+      title: "MAGNET BRUSH",
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE040FB).withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.attractions_rounded, color: Color(0xFFE040FB), size: 28),
+          ),
+          const SizedBox(height: 12),
+          const Text("Magnet Active", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white)),
+          const SizedBox(height: 4),
+          Text("Drag over shapes to\nsculpt their vertices.", textAlign: TextAlign.center, style: TextStyle(fontSize: 10, color: Colors.white.withValues(alpha: 0.5))),
+          const SizedBox(height: 16),
+          _strokeSlider(
+            value: controller.magnetRadius,
+            min: 10,
+            max: 200,
+            onChanged: (v) => controller.magnetRadius = v,
+            label: "Radius",
+            displayValue: "${controller.magnetRadius.toInt()} px",
+          ),
+          const SizedBox(height: 8),
+          _strokeSlider(
+            value: controller.magnetStrength,
+            min: 0.05,
+            max: 1.0,
+            onChanged: (v) => controller.magnetStrength = v,
+            label: "Strength",
+            displayValue: "${(controller.magnetStrength * 100).toInt()}%",
+          ),
         ],
       ),
     );
@@ -148,17 +190,26 @@ class PropertyPanel extends StatelessWidget {
               runSpacing: 8,
               alignment: WrapAlignment.center,
               children: [
-                _actionBtn(Icons.copy_rounded, controller.duplicateSelectedShape, "Duplicate"),
-                _actionBtn(Icons.flip_rounded, controller.flipHorizontal, "Flip Horiz"),
-                _actionBtn(Icons.flip_rounded, controller.flipVertical, "Flip Vert", rotateIcon: true),
-                _actionBtn(Icons.flip_to_front_rounded, controller.layerUp, "Bring Forward"),
-                _actionBtn(Icons.flip_to_back_rounded, controller.layerDown, "Send Backward"),
-                _actionBtn(Icons.edit_note_rounded, onEditText ?? () {}, "Edit Attributes"),
-                _actionBtn(Icons.rotate_right_rounded, controller.rotateSelectedShape, "Rotate 45°"),
+                _actionBtn(
+                  s.isLocked ? Icons.lock_rounded : Icons.lock_open_rounded,
+                  () {
+                    controller.saveStateForUndo();
+                    s.isLocked = !s.isLocked;
+                    controller.updateState();
+                  },
+                  s.isLocked ? "Unlock" : "Lock",
+                ),
+                _actionBtn(Icons.copy_rounded, controller.duplicateSelectedShape, "Duplicate", isDisabled: s.isLocked),
+                _actionBtn(Icons.flip_rounded, controller.flipHorizontal, "Flip Horiz", isDisabled: s.isLocked),
+                _actionBtn(Icons.flip_rounded, controller.flipVertical, "Flip Vert", rotateIcon: true, isDisabled: s.isLocked),
+                _actionBtn(Icons.flip_to_front_rounded, controller.layerUp, "Bring Forward", isDisabled: s.isLocked),
+                _actionBtn(Icons.flip_to_back_rounded, controller.layerDown, "Send Backward", isDisabled: s.isLocked),
+                _actionBtn(Icons.edit_note_rounded, onEditText ?? () {}, "Edit Attributes", isDisabled: s.isLocked),
+                _actionBtn(Icons.rotate_right_rounded, controller.rotateSelectedShape, "Rotate 45°", isDisabled: s.isLocked),
               ],
             ),
             const SizedBox(height: 12),
-            _deleteBtn(),
+            _deleteBtn(s.isLocked),
           ],
         ),
       ),
@@ -320,6 +371,7 @@ class PropertyPanel extends StatelessWidget {
   }
 
   Widget _interactionModeRow() {
+    final showWarp = controller.selectedShape?.type == ShapeType.warp;
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -333,6 +385,8 @@ class PropertyPanel extends StatelessWidget {
           _modePill(InteractionMode.smart, Icons.auto_awesome_rounded, "Smart Mode"),
           _modePill(InteractionMode.move, Icons.open_with_rounded, "Force Move"),
           _modePill(InteractionMode.resize, Icons.aspect_ratio_rounded, "Force Resize"),
+          if (showWarp)
+            _modePill(InteractionMode.warp, Icons.transform_rounded, "Warp Mode"),
         ],
       ),
     );
@@ -358,20 +412,23 @@ class PropertyPanel extends StatelessWidget {
     );
   }
 
-  Widget _actionBtn(IconData icon, VoidCallback onTap, String tooltip, {bool rotateIcon = false}) {
+  Widget _actionBtn(IconData icon, VoidCallback onTap, String tooltip, {bool rotateIcon = false, bool isDisabled = false}) {
     return Tooltip(
-      message: tooltip,
-      child: Material(
-        color: Colors.white.withValues(alpha: 0.08),
-        shape: CircleBorder(side: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
-        child: InkWell(
-          customBorder: const CircleBorder(),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Transform.rotate(
-              angle: rotateIcon ? 1.5708 : 0, 
-              child: Icon(icon, size: 18, color: Colors.white.withValues(alpha: 0.8)),
+      message: isDisabled ? "$tooltip (Locked)" : tooltip,
+      child: Opacity(
+        opacity: isDisabled ? 0.35 : 1.0,
+        child: Material(
+          color: Colors.white.withValues(alpha: 0.08),
+          shape: CircleBorder(side: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            onTap: isDisabled ? null : onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Transform.rotate(
+                angle: rotateIcon ? 1.5708 : 0, 
+                child: Icon(icon, size: 18, color: Colors.white.withValues(alpha: 0.8)),
+              ),
             ),
           ),
         ),
@@ -379,27 +436,30 @@ class PropertyPanel extends StatelessWidget {
     );
   }
 
-  Widget _deleteBtn() {
-    return Material(
-      color: const Color(0xFFEF4444).withValues(alpha: 0.15),
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
+  Widget _deleteBtn(bool isDisabled) {
+    return Opacity(
+      opacity: isDisabled ? 0.35 : 1.0,
+      child: Material(
+        color: const Color(0xFFEF4444).withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(12),
-        onTap: controller.deleteSelectedShape,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFFEF4444).withValues(alpha: 0.3)),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.delete_outline_rounded, size: 18, color: Color(0xFFF87171)),
-              SizedBox(width: 8),
-              Text("Delete Shape", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFFF87171))),
-            ],
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: isDisabled ? null : controller.deleteSelectedShape,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFEF4444).withValues(alpha: 0.3)),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.delete_outline_rounded, size: 18, color: Color(0xFFF87171)),
+                SizedBox(width: 8),
+                Text("Delete Shape", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFFF87171))),
+              ],
+            ),
           ),
         ),
       ),

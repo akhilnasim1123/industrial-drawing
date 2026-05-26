@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import '../models/drawn_shape.dart';
 import '../models/enums.dart';
+import '../models/line_segment.dart';
 import '../painters/drawing_painter.dart';
 import '../helpers/snap_helpers.dart';
 import '../helpers/shape_recognition.dart';
@@ -45,6 +46,15 @@ class DrawingConfig {
   /// Eraser radius.
   final double eraserRadius;
 
+  /// Default magnet brush radius.
+  final double magnetRadius;
+
+  /// Default magnet attraction strength (0.0–1.0).
+  final double magnetStrength;
+
+  /// Alignment guide snap threshold in logical pixels.
+  final double alignmentGuideThreshold;
+
   const DrawingConfig({
     this.maxUndoSteps = 50,
     this.snapThreshold = 5.0,
@@ -56,6 +66,9 @@ class DrawingConfig {
     this.holdDuration = const Duration(milliseconds: 300),
     this.enableSmoothing = false,
     this.eraserRadius = 20.0,
+    this.magnetRadius = 50.0,
+    this.magnetStrength = 0.4,
+    this.alignmentGuideThreshold = 6.0,
   });
 }
 
@@ -193,6 +206,32 @@ class DrawingController extends ChangeNotifier {
   Offset? _eraserPosition;
   Offset? get eraserPosition => _eraserPosition;
 
+  // ── Magnet Tool State ──
+  double _magnetRadius = 50.0;
+  double _magnetStrength = 0.4;
+  Offset? _magnetPosition;
+  bool _isMagnetActive = false;
+
+  /// The radius of the magnet attraction brush (in logical pixels).
+  double get magnetRadius => _magnetRadius;
+  set magnetRadius(double value) { _magnetRadius = value.clamp(10.0, 200.0); notifyListeners(); }
+
+  /// The strength of the magnet attraction (0.0 – 1.0).
+  double get magnetStrength => _magnetStrength;
+  set magnetStrength(double value) { _magnetStrength = value.clamp(0.05, 1.0); notifyListeners(); }
+
+  /// The current cursor position of the magnet tool (null when not active).
+  Offset? get magnetPosition => _magnetPosition;
+
+  /// Whether the magnet brush is currently being applied.
+  bool get isMagnetActive => _isMagnetActive;
+
+  // ── Alignment Guides State ──
+  List<LineSegment> _activeGuides = [];
+
+  /// Currently visible alignment guide lines.
+  List<LineSegment> get activeGuides => List.unmodifiable(_activeGuides);
+
   // ── Callbacks (for app-level UI) ──
   /// Called when the engine needs text input (e.g., the Text tool was tapped).
   void Function(Offset position)? onTextInputRequested;
@@ -289,7 +328,7 @@ class DrawingController extends ChangeNotifier {
 
   /// Deletes the currently selected shape.
   void deleteSelectedShape() {
-    if (_selectedShape == null) return;
+    if (_selectedShape == null || _selectedShape!.isLocked) return;
     saveStateForUndo();
     _shapes.remove(_selectedShape);
     _selectedShape = null;
@@ -299,7 +338,7 @@ class DrawingController extends ChangeNotifier {
 
   /// Duplicates the currently selected shape with an offset.
   void duplicateSelectedShape() {
-    if (_selectedShape == null) return;
+    if (_selectedShape == null || _selectedShape!.isLocked) return;
     saveStateForUndo();
     final clone = _selectedShape!.clone();
     const offset = Offset(20, 20);
@@ -317,7 +356,7 @@ class DrawingController extends ChangeNotifier {
 
   /// Rotates the selected shape by 45°.
   void rotateSelectedShape() {
-    if (_selectedShape == null) return;
+    if (_selectedShape == null || _selectedShape!.isLocked) return;
     saveStateForUndo();
     _selectedShape!.rotation += math.pi / 4;
     _notify();
@@ -337,7 +376,7 @@ class DrawingController extends ChangeNotifier {
 
   /// Moves the selected shape up one layer.
   void layerUp() {
-    if (_selectedShape == null) return;
+    if (_selectedShape == null || _selectedShape!.isLocked) return;
     saveStateForUndo();
     final idx = _shapes.indexOf(_selectedShape!);
     if (idx < _shapes.length - 1) {
@@ -349,7 +388,7 @@ class DrawingController extends ChangeNotifier {
 
   /// Moves the selected shape down one layer.
   void layerDown() {
-    if (_selectedShape == null) return;
+    if (_selectedShape == null || _selectedShape!.isLocked) return;
     saveStateForUndo();
     final idx = _shapes.indexOf(_selectedShape!);
     if (idx > 0) {
@@ -361,7 +400,7 @@ class DrawingController extends ChangeNotifier {
 
   /// Flips the selected shape horizontally.
   void flipHorizontal() {
-    if (_selectedShape == null) return;
+    if (_selectedShape == null || _selectedShape!.isLocked) return;
     saveStateForUndo();
     final cx = (_selectedShape!.start.dx + _selectedShape!.end.dx) / 2;
     _selectedShape!.start = Offset(2 * cx - _selectedShape!.start.dx, _selectedShape!.start.dy);
@@ -374,7 +413,7 @@ class DrawingController extends ChangeNotifier {
 
   /// Flips the selected shape vertically.
   void flipVertical() {
-    if (_selectedShape == null) return;
+    if (_selectedShape == null || _selectedShape!.isLocked) return;
     saveStateForUndo();
     final cy = (_selectedShape!.start.dy + _selectedShape!.end.dy) / 2;
     _selectedShape!.start = Offset(_selectedShape!.start.dx, 2 * cy - _selectedShape!.start.dy);
@@ -432,19 +471,51 @@ class DrawingController extends ChangeNotifier {
       return;
     }
 
+    // Magnet tool
+    if (_currentTool == Tool.magnet) {
+      saveStateForUndo();
+      _magnetPosition = pos;
+      _isMagnetActive = true;
+      _applyMagnetAttraction(pos);
+      _notify();
+      return;
+    }
+
     if (_currentTool == Tool.select) {
-      // Text label dragging
-      if (_selectedShape != null && _selectedShape!.textPositions.isNotEmpty) {
-        for (final entry in _selectedShape!.textPositions.entries) {
-          if ((entry.value - pos).distance <= 50) {
+      DrawnShape? lockedShape;
+      for (final s in _shapes) {
+        if (s.isLocked) {
+          lockedShape = s;
+          break;
+        }
+      }
+
+      if (lockedShape != null) {
+        // Only check text positions for the locked shape
+        for (final entry in lockedShape.textPositions.entries) {
+          if ((entry.value - pos).distance <= 35) {
+            _selectedShape = lockedShape;
             _selectedTextKey = entry.key;
             _textDragStartPoint = pos;
+            _notify();
             return;
           }
         }
+      } else {
+        // Text label dragging
+        if (_selectedShape != null && _selectedShape!.textPositions.isNotEmpty) {
+          for (final entry in _selectedShape!.textPositions.entries) {
+            if ((entry.value - pos).distance <= 50) {
+              _selectedTextKey = entry.key;
+              _textDragStartPoint = pos;
+              return;
+            }
+          }
+        }
       }
+
       // Resize handles
-      if (_selectedShape != null && _interactionMode != InteractionMode.move) {
+      if (_selectedShape != null && !_selectedShape!.isLocked && _interactionMode != InteractionMode.move) {
         for (final handle in ResizeHandle.values) {
           if (handle == ResizeHandle.none) continue;
           final corner = _selectedShape!.getCornerOffset(handle);
@@ -511,6 +582,14 @@ class DrawingController extends ChangeNotifier {
       return;
     }
 
+    // Magnet tool
+    if (_currentTool == Tool.magnet && _isMagnetActive) {
+      _magnetPosition = pos;
+      _applyMagnetAttraction(pos);
+      _notify();
+      return;
+    }
+
     // Pan tool
     if (_currentTool == Tool.pan) {
       _canvasOffset += delta;
@@ -527,7 +606,7 @@ class DrawingController extends ChangeNotifier {
     }
 
     // Resize handle fallback check
-    if (_currentTool == Tool.select && _selectedShape != null && !_isResizing && _interactionMode != InteractionMode.move) {
+    if (_currentTool == Tool.select && _selectedShape != null && !_selectedShape!.isLocked && !_isResizing && _interactionMode != InteractionMode.move) {
       for (final handle in ResizeHandle.values) {
         if (handle == ResizeHandle.none) continue;
         final corner = _selectedShape!.getCornerOffset(handle);
@@ -548,7 +627,7 @@ class DrawingController extends ChangeNotifier {
     }
 
     // Moving shapes
-    if (_currentTool == Tool.select && _selectedShape != null && _selectionStartPoint != null) {
+    if (_currentTool == Tool.select && _selectedShape != null && !_selectedShape!.isLocked && _selectionStartPoint != null) {
       if (_interactionMode == InteractionMode.resize && !_isResizing) return;
 
       final moveDelta = pos - _selectionStartPoint!;
@@ -581,10 +660,14 @@ class DrawingController extends ChangeNotifier {
       _selectedShape!.start += offsetToApply;
       _selectedShape!.end += offsetToApply;
       _selectedShape!.textPositions = _selectedShape!.textPositions.map((k, p) => MapEntry(k, p + offsetToApply));
-      if (_selectedShape!.type == ShapeType.freehand && _selectedShape!.pathPoints != null) {
+      if (_selectedShape!.pathPoints != null) {
         _selectedShape!.pathPoints = _selectedShape!.pathPoints!.map((p) => p + offsetToApply).toList();
       }
       _selectionStartPoint = pos;
+
+      // Compute alignment guides
+      _computeAlignmentGuides(_selectedShape!);
+
       _notify();
       return;
     }
@@ -625,12 +708,23 @@ class DrawingController extends ChangeNotifier {
     _holdTimer?.cancel();
     _eraserPosition = null;
 
+    // End magnet interaction
+    if (_currentTool == Tool.magnet) {
+      _magnetPosition = null;
+      _isMagnetActive = false;
+      _notify();
+      return;
+    }
+
     if (_isResizing) {
       _isResizing = false;
       _activeHandle = ResizeHandle.none;
       _resizeStartPoint = null;
       _initialResizeShape = null;
     }
+
+    // Clear alignment guides on release
+    _activeGuides = [];
 
     if (_currentTool == Tool.select || _currentTool == Tool.eraser) {
       _selectionStartPoint = null;
@@ -643,6 +737,12 @@ class DrawingController extends ChangeNotifier {
       _initTextPositions(shape);
       _shapes.add(shape);
       onShapeAdded?.call(shape);
+      if (_currentShape == ShapeType.warp) {
+        _selectedShape = shape;
+        _interactionMode = InteractionMode.warp;
+        _currentTool = Tool.select;
+        onSelectionChanged?.call(shape);
+      }
       _lastLineEndPoint = _currentShape == ShapeType.line ? _endPoint : null;
     } else if (_isDrawing && _currentTool == Tool.draw && _currentShape == ShapeType.freehand) {
       if (_shapes.isNotEmpty && _shapes.last.pathPoints != null) {
@@ -715,6 +815,19 @@ class DrawingController extends ChangeNotifier {
   // ════════════════ INTERNAL HELPERS ════════════════
 
   DrawnShape? _getShapeAtPoint(Offset point) {
+    DrawnShape? lockedShape;
+    for (final s in _shapes) {
+      if (s.isLocked) {
+        lockedShape = s;
+        break;
+      }
+    }
+
+    if (lockedShape != null) {
+      if (lockedShape.contains(point)) return lockedShape;
+      return null;
+    }
+
     for (var i = _shapes.length - 1; i >= 0; i--) {
       if (_shapes[i].contains(point)) return _shapes[i];
     }
@@ -736,8 +849,130 @@ class DrawingController extends ChangeNotifier {
   }
 
   void _resizeSelectedShape(Offset currentPos) {
-    if (_selectedShape == null || _initialResizeShape == null || _resizeStartPoint == null) return;
+    if (_selectedShape == null || _selectedShape!.isLocked || _initialResizeShape == null || _resizeStartPoint == null) return;
     final delta = currentPos - _resizeStartPoint!;
+
+    if (_selectedShape!.type == ShapeType.warp && _selectedShape!.pathPoints != null && _interactionMode == InteractionMode.warp) {
+      int pointIndex = -1;
+      switch (_activeHandle) {
+        case ResizeHandle.topLeft:
+          pointIndex = 0;
+          break;
+        case ResizeHandle.topCenter:
+          pointIndex = 1;
+          break;
+        case ResizeHandle.topRight:
+          pointIndex = 2;
+          break;
+        case ResizeHandle.rightCenter:
+          pointIndex = 3;
+          break;
+        case ResizeHandle.bottomRight:
+          pointIndex = 4;
+          break;
+        case ResizeHandle.bottomCenter:
+          pointIndex = 5;
+          break;
+        case ResizeHandle.bottomLeft:
+          pointIndex = 6;
+          break;
+        case ResizeHandle.leftCenter:
+          pointIndex = 7;
+          break;
+        default:
+          pointIndex = -1;
+      }
+
+      if (pointIndex != -1) {
+        final initialPoints = _initialResizeShape!.pathPoints!;
+        final rotation = _selectedShape!.rotation;
+        final cosR = math.cos(-rotation);
+        final sinR = math.sin(-rotation);
+        final unrotatedDelta = Offset(
+          delta.dx * cosR - delta.dy * sinR,
+          delta.dx * sinR + delta.dy * cosR,
+        );
+
+        if (pointIndex % 2 == 0) {
+          // Corner warp (0, 2, 4, 6)
+          final h = (initialPoints[6].dy - initialPoints[0].dy).abs();
+          
+          if (pointIndex == 0) {
+            final newY = initialPoints[0].dy + unrotatedDelta.dy;
+            _selectedShape!.pathPoints![0] = Offset(initialPoints[0].dx, newY);
+            _selectedShape!.pathPoints![6] = Offset(initialPoints[6].dx, newY + h);
+          } else if (pointIndex == 6) {
+            final newY = initialPoints[6].dy + unrotatedDelta.dy;
+            _selectedShape!.pathPoints![6] = Offset(initialPoints[6].dx, newY);
+            _selectedShape!.pathPoints![0] = Offset(initialPoints[0].dx, newY - h);
+          } else if (pointIndex == 2) {
+            final newY = initialPoints[2].dy + unrotatedDelta.dy;
+            _selectedShape!.pathPoints![2] = Offset(initialPoints[2].dx, newY);
+            _selectedShape!.pathPoints![4] = Offset(initialPoints[4].dx, newY + h);
+          } else if (pointIndex == 4) {
+            final newY = initialPoints[4].dy + unrotatedDelta.dy;
+            _selectedShape!.pathPoints![4] = Offset(initialPoints[4].dx, newY);
+            _selectedShape!.pathPoints![2] = Offset(initialPoints[2].dx, newY - h);
+          }
+        } else {
+          // Side center warp (1, 3, 5, 7)
+          final skewDelta = unrotatedDelta;
+
+          if (pointIndex == 1) {
+            _selectedShape!.pathPoints![0] = initialPoints[0] + skewDelta;
+            _selectedShape!.pathPoints![1] = initialPoints[1] + skewDelta;
+            _selectedShape!.pathPoints![2] = initialPoints[2] + skewDelta;
+          } else if (pointIndex == 3) {
+            _selectedShape!.pathPoints![2] = initialPoints[2] + skewDelta;
+            _selectedShape!.pathPoints![3] = initialPoints[3] + skewDelta;
+            _selectedShape!.pathPoints![4] = initialPoints[4] + skewDelta;
+          } else if (pointIndex == 5) {
+            _selectedShape!.pathPoints![4] = initialPoints[4] + skewDelta;
+            _selectedShape!.pathPoints![5] = initialPoints[5] + skewDelta;
+            _selectedShape!.pathPoints![6] = initialPoints[6] + skewDelta;
+          } else if (pointIndex == 7) {
+            _selectedShape!.pathPoints![6] = initialPoints[6] + skewDelta;
+            _selectedShape!.pathPoints![7] = initialPoints[7] + skewDelta;
+            _selectedShape!.pathPoints![0] = initialPoints[0] + skewDelta;
+          }
+        }
+
+        _selectedShape!.pathPoints![1] = (_selectedShape!.pathPoints![0] + _selectedShape!.pathPoints![2]) / 2;
+        _selectedShape!.pathPoints![3] = (_selectedShape!.pathPoints![2] + _selectedShape!.pathPoints![4]) / 2;
+        _selectedShape!.pathPoints![5] = (_selectedShape!.pathPoints![4] + _selectedShape!.pathPoints![6]) / 2;
+        _selectedShape!.pathPoints![7] = (_selectedShape!.pathPoints![6] + _selectedShape!.pathPoints![0]) / 2;
+
+        double minX = _selectedShape!.pathPoints!.map((p) => p.dx).reduce(math.min);
+        double maxX = _selectedShape!.pathPoints!.map((p) => p.dx).reduce(math.max);
+        double minY = _selectedShape!.pathPoints!.map((p) => p.dy).reduce(math.min);
+        double maxY = _selectedShape!.pathPoints!.map((p) => p.dy).reduce(math.max);
+        _selectedShape!.start = Offset(minX, minY);
+        _selectedShape!.end = Offset(maxX, maxY);
+      }
+      _notify();
+      return;
+    }
+
+    if (_selectedShape!.type == ShapeType.warp && _selectedShape!.pathPoints != null && _interactionMode != InteractionMode.warp) {
+      final originalRect = Rect.fromPoints(_initialResizeShape!.start, _initialResizeShape!.end);
+      final newEnd = _initialResizeShape!.end + delta;
+      final newRect = Rect.fromPoints(_initialResizeShape!.start, newEnd);
+      
+      final scaleX = originalRect.width > 0.01 ? newRect.width / originalRect.width : 1.0;
+      final scaleY = originalRect.height > 0.01 ? newRect.height / originalRect.height : 1.0;
+      
+      _selectedShape!.start = newRect.topLeft;
+      _selectedShape!.end = newRect.bottomRight;
+      
+      _selectedShape!.pathPoints = _initialResizeShape!.pathPoints!.map((p) {
+        final relX = p.dx - originalRect.left;
+        final relY = p.dy - originalRect.top;
+        return Offset(newRect.left + relX * scaleX, newRect.top + relY * scaleY);
+      }).toList();
+      _notify();
+      return;
+    }
+
     _selectedShape!.start = _initialResizeShape!.start;
     _selectedShape!.end = _initialResizeShape!.end + delta;
 
@@ -788,6 +1023,30 @@ class DrawingController extends ChangeNotifier {
       case ShapeType.circle:
         shape.textPositions = {"Center": Offset(cx, cy)};
         break;
+      case ShapeType.rake:
+        const padding = 20.0;
+        final rect = Rect.fromPoints(shape.start, shape.end);
+        shape.textPositions = {
+          "Top": Offset(cx, rect.top - padding),
+          "Bottom": Offset(cx, rect.bottom + padding - 15),
+          "Left": Offset(rect.left - padding - 10, cy),
+          "Right": Offset(rect.right + padding - 10, cy),
+        };
+        break;
+      case ShapeType.warp:
+        final rect = Rect.fromPoints(shape.start, shape.end);
+        shape.pathPoints = [
+          rect.topLeft,      // 0
+          Offset((rect.left + rect.right) / 2, rect.top),    // 1: TC
+          rect.topRight,     // 2
+          Offset(rect.right, (rect.top + rect.bottom) / 2),  // 3: RC
+          rect.bottomRight,  // 4
+          Offset((rect.left + rect.right) / 2, rect.bottom), // 5: BC
+          rect.bottomLeft,   // 6
+          Offset(rect.left, (rect.top + rect.bottom) / 2),   // 7: LC
+        ];
+        shape.textPositions = {"Center": Offset(cx, cy)};
+        break;
       default:
         shape.textPositions = {"Center": Offset(cx, cy)};
     }
@@ -835,6 +1094,116 @@ class DrawingController extends ChangeNotifier {
     _canvasScale = 1.0;
     _canvasOffset = Offset.zero;
     _notify();
+  }
+
+  // ════════════════ MAGNET TOOL ════════════════
+
+  /// Applies the magnet attraction to all shape vertices within the brush radius.
+  void _applyMagnetAttraction(Offset cursorPos) {
+    final radiusSq = _magnetRadius * _magnetRadius;
+
+    for (final shape in _shapes) {
+      if (shape.isLocked) continue;
+
+      // Attract freehand/warp pathPoints
+      if (shape.pathPoints != null) {
+        bool mutated = false;
+        for (int i = 0; i < shape.pathPoints!.length; i++) {
+          final point = shape.pathPoints![i];
+          final distSq = (point - cursorPos).distanceSquared;
+          if (distSq < radiusSq && distSq > 0.01) {
+            final dist = math.sqrt(distSq);
+            // Smooth falloff: closer points are attracted more strongly
+            final falloff = 1.0 - (dist / _magnetRadius);
+            final pull = falloff * falloff * _magnetStrength;
+            final direction = cursorPos - point;
+            shape.pathPoints![i] = point + direction * pull;
+            mutated = true;
+          }
+        }
+        if (mutated) {
+          // Update bounding box for pathPoints-based shapes
+          double minX = double.infinity, minY = double.infinity;
+          double maxX = double.negativeInfinity, maxY = double.negativeInfinity;
+          for (final p in shape.pathPoints!) {
+            if (p.dx < minX) minX = p.dx;
+            if (p.dy < minY) minY = p.dy;
+            if (p.dx > maxX) maxX = p.dx;
+            if (p.dy > maxY) maxY = p.dy;
+          }
+          shape.start = Offset(minX, minY);
+          shape.end = Offset(maxX, maxY);
+        }
+        continue;
+      }
+
+      // For corner-based shapes (rectangle, triangle, etc.),
+      // attract start and end independently.
+      final startDistSq = (shape.start - cursorPos).distanceSquared;
+      if (startDistSq < radiusSq && startDistSq > 0.01) {
+        final dist = math.sqrt(startDistSq);
+        final falloff = 1.0 - (dist / _magnetRadius);
+        final pull = falloff * falloff * _magnetStrength;
+        shape.start = shape.start + (cursorPos - shape.start) * pull;
+      }
+      final endDistSq = (shape.end - cursorPos).distanceSquared;
+      if (endDistSq < radiusSq && endDistSq > 0.01) {
+        final dist = math.sqrt(endDistSq);
+        final falloff = 1.0 - (dist / _magnetRadius);
+        final pull = falloff * falloff * _magnetStrength;
+        shape.end = shape.end + (cursorPos - shape.end) * pull;
+      }
+    }
+  }
+
+  // ════════════════ ALIGNMENT GUIDES ════════════════
+
+  /// Computes alignment guide lines for the currently moving shape.
+  void _computeAlignmentGuides(DrawnShape movingShape) {
+    final guides = <LineSegment>[];
+    final threshold = config.alignmentGuideThreshold;
+
+    final mb = movingShape.bounds;
+    final mEdges = [
+      mb.left, mb.center.dx, mb.right,  // x-axis: left, center, right
+      mb.top, mb.center.dy, mb.bottom,  // y-axis: top, center, bottom
+    ];
+
+    for (final shape in _shapes) {
+      if (shape == movingShape) continue;
+
+      final sb = shape.bounds;
+      final sEdges = [
+        sb.left, sb.center.dx, sb.right,
+        sb.top, sb.center.dy, sb.bottom,
+      ];
+
+      // Check vertical alignment (x-axis matches -> draw vertical line)
+      for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+          if ((mEdges[i] - sEdges[j]).abs() < threshold) {
+            final x = sEdges[j];
+            final topY = math.min(mb.top, sb.top) - 20;
+            final bottomY = math.max(mb.bottom, sb.bottom) + 20;
+            guides.add(LineSegment(Offset(x, topY), Offset(x, bottomY)));
+          }
+        }
+      }
+
+      // Check horizontal alignment (y-axis matches -> draw horizontal line)
+      for (int i = 3; i < 6; i++) {
+        for (int j = 3; j < 6; j++) {
+          if ((mEdges[i] - sEdges[j]).abs() < threshold) {
+            final y = sEdges[j];
+            final leftX = math.min(mb.left, sb.left) - 20;
+            final rightX = math.max(mb.right, sb.right) + 20;
+            guides.add(LineSegment(Offset(leftX, y), Offset(rightX, y)));
+          }
+        }
+      }
+    }
+
+    _activeGuides = guides;
   }
 
   @override

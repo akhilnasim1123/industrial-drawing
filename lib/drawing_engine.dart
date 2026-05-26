@@ -32,6 +32,7 @@ library;
 // Models
 export 'src/models/enums.dart';
 export 'src/models/drawn_shape.dart';
+export 'src/models/line_segment.dart';
 
 // Controller
 export 'src/controllers/drawing_controller.dart';

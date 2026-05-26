@@ -1,3 +1,11 @@
+## 1.0.5
+
+* Added **Magnet Tool** — a sculpting brush that attracts shape vertices toward the cursor with configurable radius and strength.
+* Added **Magnetic Alignment Guides** — dashed magenta guide lines that appear when dragging shapes, showing edge/center alignment with other shapes.
+* New `LineSegment` model for alignment guide representation.
+* New `DrawingConfig` options: `magnetRadius`, `magnetStrength`, `alignmentGuideThreshold`.
+* Added Magnet tool button to the toolbar and dedicated property panel with radius/strength sliders.
+
 ## 1.0.4
 
 * Upgraded package dependencies (`cupertino_icons`, `google_fonts`, and `share_plus`) to support their latest stable versions.

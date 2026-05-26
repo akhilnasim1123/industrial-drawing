@@ -5,6 +5,7 @@ import 'package:icons_plus/icons_plus.dart';
 import '../controllers/drawing_controller.dart';
 import '../models/drawn_shape.dart';
 import '../models/enums.dart';
+import '../models/line_segment.dart';
 
 /// Custom painter that renders all shapes, grid, selection indicators,
 /// measurement lines, and previews on the canvas.
@@ -24,6 +25,7 @@ class DrawingPainter extends CustomPainter {
   final Offset? measurementStart;
   final Offset? measurementEnd;
   final DrawnShape? selectedShape;
+  final InteractionMode interactionMode;
   final bool showGrid;
   final bool isResizing;
   final double canvasScale;
@@ -32,6 +34,10 @@ class DrawingPainter extends CustomPainter {
   final int revision;
   final Offset? eraserPosition;
   final double eraserRadius;
+  final Offset? magnetPosition;
+  final double magnetRadius;
+  final bool isMagnetActive;
+  final List<LineSegment> activeGuides;
 
   DrawingPainter(
     this.shapes,
@@ -46,6 +52,7 @@ class DrawingPainter extends CustomPainter {
     this.measurementStart,
     this.measurementEnd,
     this.selectedShape, {
+    this.interactionMode = InteractionMode.smart,
     this.showGrid = true,
     this.isResizing = false,
     this.canvasScale = 1.0,
@@ -54,6 +61,10 @@ class DrawingPainter extends CustomPainter {
     this.revision = 0,
     this.eraserPosition,
     this.eraserRadius = 20.0,
+    this.magnetPosition,
+    this.magnetRadius = 50.0,
+    this.isMagnetActive = false,
+    this.activeGuides = const [],
   });
 
   /// Creates a painter directly from a [DrawingController].
@@ -71,6 +82,7 @@ class DrawingPainter extends CustomPainter {
       c.measurementStart,
       c.measurementEnd,
       c.selectedShape,
+      interactionMode: c.interactionMode,
       showGrid: showGrid,
       isResizing: c.isResizing,
       canvasScale: c.canvasScale,
@@ -79,6 +91,10 @@ class DrawingPainter extends CustomPainter {
       revision: c.revision,
       eraserPosition: c.eraserPosition,
       eraserRadius: c.config.eraserRadius,
+      magnetPosition: c.magnetPosition,
+      magnetRadius: c.magnetRadius,
+      isMagnetActive: c.isMagnetActive,
+      activeGuides: c.activeGuides,
     );
   }
 
@@ -120,6 +136,16 @@ class DrawingPainter extends CustomPainter {
     // Eraser cursor
     if (currentTool == Tool.eraser && eraserPosition != null) {
       _drawEraserCursor(canvas);
+    }
+
+    // Magnet brush cursor
+    if (currentTool == Tool.magnet && magnetPosition != null) {
+      _drawMagnetCursor(canvas);
+    }
+
+    // Alignment guides
+    if (activeGuides.isNotEmpty) {
+      _drawAlignmentGuides(canvas);
     }
 
     canvas.restore();
@@ -231,6 +257,30 @@ class DrawingPainter extends CustomPainter {
         final thickness = (s.end.dx - s.start.dx).abs() * 0.2;
         final path = Path()..addRect(outer)..addRect(outer.deflate(thickness))..fillType = PathFillType.evenOdd;
         canvas.drawPath(path, paint);
+        break;
+      case ShapeType.rake:
+        final rect = Rect.fromPoints(s.start, s.end);
+        canvas.drawLine(rect.topLeft, rect.topRight, paint);
+        const teethCount = 6;
+        final step = rect.width / (teethCount - 1);
+        for (int i = 0; i < teethCount; i++) {
+          final x = rect.left + i * step;
+          canvas.drawLine(Offset(x, rect.top), Offset(x, rect.bottom), paint);
+        }
+        break;
+      case ShapeType.warp:
+        if (s.pathPoints != null && (s.pathPoints!.length == 4 || s.pathPoints!.length == 8)) {
+          final corners = s.pathPoints!.length == 8
+              ? [s.pathPoints![0], s.pathPoints![2], s.pathPoints![4], s.pathPoints![6]]
+              : s.pathPoints!;
+          final path = Path()
+            ..moveTo(corners[0].dx, corners[0].dy)
+            ..lineTo(corners[1].dx, corners[1].dy)
+            ..lineTo(corners[2].dx, corners[2].dy)
+            ..lineTo(corners[3].dx, corners[3].dy)
+            ..close();
+          canvas.drawPath(path, paint);
+        }
         break;
       case ShapeType.text:
         s.texts.forEach((key, label) {
@@ -353,6 +403,7 @@ class DrawingPainter extends CustomPainter {
   void _drawSelectionIndicator(Canvas canvas, DrawnShape s) {
     final strokePaint = Paint()..color = Colors.blue..strokeWidth = 1.5..style = PaintingStyle.stroke;
     final glowPaint = Paint()..color = Colors.blue.withValues(alpha: 0.2)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4)..style = PaintingStyle.stroke..strokeWidth = 3;
+    final hPaint = Paint()..color = Colors.blue..style = PaintingStyle.fill;
 
     Rect bounds;
     if (s.type == ShapeType.freehand && s.pathPoints != null && s.pathPoints!.isNotEmpty) {
@@ -372,6 +423,53 @@ class DrawingPainter extends CustomPainter {
     }
 
     final boundsCenter = bounds.center;
+
+    if (s.isLocked) {
+      final scaled = bounds.inflate(7);
+      final dashed = _createDashedRect(scaled, 5, 4);
+
+      canvas.save();
+      canvas.translate(boundsCenter.dx, boundsCenter.dy);
+      canvas.rotate(s.rotation);
+      canvas.translate(-boundsCenter.dx, -boundsCenter.dy);
+
+      final lockStrokePaint = Paint()..color = Colors.red..strokeWidth = 1.5..style = PaintingStyle.stroke;
+      final lockGlowPaint = Paint()..color = Colors.red.withValues(alpha: 0.2)..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4)..style = PaintingStyle.stroke..strokeWidth = 3;
+
+      canvas.drawPath(dashed, lockGlowPaint);
+      canvas.drawPath(dashed, lockStrokePaint);
+
+      _drawIconOnCanvas(canvas, boundsCenter, Bootstrap.lock, 22, Colors.red);
+
+      canvas.restore();
+      return;
+    }
+
+    if (s.type == ShapeType.warp && s.pathPoints != null && s.pathPoints!.length >= 8 && interactionMode == InteractionMode.warp) {
+      final borderPath = Path()..moveTo(s.pathPoints![0].dx, s.pathPoints![0].dy);
+      for (int i = 1; i < 8; i++) {
+        borderPath.lineTo(s.pathPoints![i].dx, s.pathPoints![i].dy);
+      }
+      borderPath.close();
+
+      canvas.drawPath(borderPath, glowPaint);
+      canvas.drawPath(borderPath, strokePaint);
+
+      for (int i = 0; i < 8; i++) {
+        canvas.drawCircle(s.pathPoints![i], handleRadius, hPaint);
+      }
+      _drawIconOnCanvas(canvas, boundsCenter, Bootstrap.arrows_move, 22, Colors.blue);
+
+      if (s.texts.isNotEmpty) {
+        s.texts.forEach((key, _) {
+          final pos = s.textPositions[key] ?? s.start;
+          canvas.drawLine(boundsCenter, pos, Paint()..color = Colors.blue.withValues(alpha: 0.5)..strokeWidth = 1.5);
+          canvas.drawCircle(pos, handleRadius, hPaint);
+        });
+      }
+      return;
+    }
+
     final scaled = bounds.inflate(7);
     final dashed = _createDashedRect(scaled, 5, 4);
 
@@ -383,7 +481,6 @@ class DrawingPainter extends CustomPainter {
     canvas.drawPath(dashed, glowPaint);
     canvas.drawPath(dashed, strokePaint);
 
-    final hPaint = Paint()..color = Colors.blue..style = PaintingStyle.fill;
     for (final corner in [scaled.topLeft, scaled.topRight, scaled.bottomLeft, scaled.bottomRight]) {
       canvas.drawCircle(corner, handleRadius, hPaint);
       if (corner == scaled.bottomRight || corner == scaled.bottomLeft) {
@@ -439,4 +536,67 @@ class DrawingPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant DrawingPainter old) => old.revision != revision;
+
+  void _drawMagnetCursor(Canvas canvas) {
+    // Outer glow
+    final glowPaint = Paint()
+      ..color = const Color(0xFFE040FB).withValues(alpha: 0.12)
+      ..style = PaintingStyle.fill
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
+    canvas.drawCircle(magnetPosition!, magnetRadius, glowPaint);
+
+    // Fill (subtle)
+    final fillPaint = Paint()
+      ..color = const Color(0xFFE040FB).withValues(alpha: isMagnetActive ? 0.08 : 0.04)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(magnetPosition!, magnetRadius, fillPaint);
+
+    // Border ring
+    final borderPaint = Paint()
+      ..color = const Color(0xFFE040FB).withValues(alpha: isMagnetActive ? 0.7 : 0.35)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0;
+    canvas.drawCircle(magnetPosition!, magnetRadius, borderPaint);
+
+    // Center dot
+    final centerPaint = Paint()
+      ..color = const Color(0xFFE040FB).withValues(alpha: 0.6)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(magnetPosition!, 3, centerPaint);
+  }
+
+  void _drawAlignmentGuides(Canvas canvas) {
+    for (final guide in activeGuides) {
+      // Dashed magenta line
+      final dashPath = _addDashedLine(guide.start, guide.end, 6, 4);
+      final guidePaint = Paint()
+        ..color = const Color(0xFFE040FB).withValues(alpha: 0.7)
+        ..strokeWidth = 1.0
+        ..style = PaintingStyle.stroke;
+      canvas.drawPath(dashPath, guidePaint);
+
+      // Glow effect
+      final glowPaint = Paint()
+        ..color = const Color(0xFFE040FB).withValues(alpha: 0.2)
+        ..strokeWidth = 3.0
+        ..style = PaintingStyle.stroke
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
+      canvas.drawPath(dashPath, glowPaint);
+
+      // Small diamonds at endpoints
+      _drawGuideDiamond(canvas, guide.start);
+      _drawGuideDiamond(canvas, guide.end);
+    }
+  }
+
+  void _drawGuideDiamond(Canvas canvas, Offset center) {
+    const size = 4.0;
+    final path = Path()
+      ..moveTo(center.dx, center.dy - size)
+      ..lineTo(center.dx + size, center.dy)
+      ..lineTo(center.dx, center.dy + size)
+      ..lineTo(center.dx - size, center.dy)
+      ..close();
+    canvas.drawPath(path, Paint()..color = const Color(0xFFE040FB).withValues(alpha: 0.8)..style = PaintingStyle.fill);
+  }
 }

@@ -14,13 +14,15 @@ enum ShapeType {
   star,
   polygon,
   dimension,
+  rake,
+  warp,
 }
 
 /// Drawing modes for shapes.
 enum DrawMode { stroke, fill }
 
 /// Available tools in the drawing engine.
-enum Tool { draw, measure, select, pan, eraser }
+enum Tool { draw, measure, select, pan, eraser, magnet }
 
 /// Resize handles on a selected shape's bounding box.
 enum ResizeHandle {
@@ -29,7 +31,11 @@ enum ResizeHandle {
   topRight,
   bottomRight,
   bottomLeft,
+  topCenter,
+  rightCenter,
+  bottomCenter,
+  leftCenter,
 }
 
 /// Interaction modes when a shape is selected.
-enum InteractionMode { smart, move, resize }
+enum InteractionMode { smart, move, resize, warp }

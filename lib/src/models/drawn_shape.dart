@@ -28,6 +28,9 @@ class DrawnShape {
   /// Number of sides for polygon shapes.
   int polygonSides;
 
+  /// Whether the shape is locked and cannot be moved, resized, or deleted.
+  bool isLocked;
+
   DrawnShape(
     this.start,
     this.end,
@@ -44,6 +47,7 @@ class DrawnShape {
     this.rotation = 0.0,
     this.opacity = 1.0,
     this.polygonSides = 5,
+    this.isLocked = false,
   })  : texts = texts ?? {},
         textPositions = textPositions ?? {};
 
@@ -65,6 +69,7 @@ class DrawnShape {
       rotation: rotation,
       opacity: opacity,
       polygonSides: polygonSides,
+      isLocked: isLocked,
     );
   }
 
@@ -88,6 +93,7 @@ class DrawnShape {
     double? rotation,
     double? opacity,
     int? polygonSides,
+    bool? isLocked,
   }) {
     return DrawnShape(
       start ?? this.start,
@@ -105,6 +111,7 @@ class DrawnShape {
       rotation: rotation ?? this.rotation,
       opacity: opacity ?? this.opacity,
       polygonSides: polygonSides ?? this.polygonSides,
+      isLocked: isLocked ?? this.isLocked,
     );
   }
 
@@ -154,6 +161,25 @@ class DrawnShape {
       return false;
     }
 
+    if (type == ShapeType.warp && pathPoints != null && (pathPoints!.length == 4 || pathPoints!.length == 8)) {
+      final corners = pathPoints!.length == 8
+          ? [pathPoints![0], pathPoints![2], pathPoints![4], pathPoints![6]]
+          : pathPoints!;
+      final path = Path()
+        ..moveTo(corners[0].dx, corners[0].dy)
+        ..lineTo(corners[1].dx, corners[1].dy)
+        ..lineTo(corners[2].dx, corners[2].dy)
+        ..lineTo(corners[3].dx, corners[3].dy)
+        ..close();
+      if (path.contains(point)) return true;
+      for (int i = 0; i < 4; i++) {
+        final p1 = corners[i];
+        final p2 = corners[(i + 1) % 4];
+        if (_isPointOnLine(p1, p2, point, math.max(strokeWidth + 15.0, 25.0))) return true;
+      }
+      return false;
+    }
+
     final shapeBounds = Rect.fromPoints(start, end).inflate(10);
     final shapeCenter = shapeBounds.center;
     final sinR = math.sin(-rotation);
@@ -179,6 +205,19 @@ class DrawnShape {
 
   /// Gets the corner offset for the given resize handle.
   Offset getCornerOffset(ResizeHandle handle) {
+    if (type == ShapeType.warp && pathPoints != null && pathPoints!.length >= 8) {
+      switch (handle) {
+        case ResizeHandle.topLeft: return pathPoints![0];
+        case ResizeHandle.topCenter: return pathPoints![1];
+        case ResizeHandle.topRight: return pathPoints![2];
+        case ResizeHandle.rightCenter: return pathPoints![3];
+        case ResizeHandle.bottomRight: return pathPoints![4];
+        case ResizeHandle.bottomCenter: return pathPoints![5];
+        case ResizeHandle.bottomLeft: return pathPoints![6];
+        case ResizeHandle.leftCenter: return pathPoints![7];
+        default: return Offset.zero;
+      }
+    }
     switch (handle) {
       case ResizeHandle.topLeft:
         return Offset(math.min(start.dx, end.dx), math.min(start.dy, end.dy));
@@ -220,6 +259,7 @@ class DrawnShape {
       'rotation': rotation,
       'opacity': opacity,
       'polygonSides': polygonSides,
+      'isLocked': isLocked,
     };
   }
 
@@ -241,6 +281,7 @@ class DrawnShape {
       rotation: (json['rotation'] as num).toDouble(),
       opacity: (json['opacity'] as num?)?.toDouble() ?? 1.0,
       polygonSides: (json['polygonSides'] as int?) ?? 5,
+      isLocked: json['isLocked'] as bool? ?? false,
     );
   }
 
