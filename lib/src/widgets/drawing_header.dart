@@ -114,7 +114,7 @@ class DrawingHeader extends StatelessWidget {
                     if (onShare != null)
                       _headerBtn(icon: Icons.ios_share_rounded, onTap: onShare, tooltip: "Share"),
 
-                    if (extraActions != null) ...extraActions!,
+                    ...?extraActions,
 
                     if (onClear != null)
                       _headerBtn(icon: Icons.delete_outline_rounded, onTap: onClear, tooltip: "Clear All", destructive: true),

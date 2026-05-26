@@ -1,3 +1,8 @@
+## 1.0.4
+
+* Upgraded package dependencies (`cupertino_icons`, `google_fonts`, and `share_plus`) to support their latest stable versions.
+* Fixed layout lint warnings in drawing header widget.
+
 ## 1.0.3
 
 * Fixed all lints across the codebase (replaced deprecated APIs, resolved `withOpacity` vs `withValues` precision warnings).
